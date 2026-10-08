@@ -55,28 +55,36 @@ const questions = [
   {
     text: "Из какого вы подразделения?",
     answers: ["Отвечает чётко и быстро", "Иные варианты"],
-    correct: [1],
-    points: 1
+    correct: [1]
   },
   {
     text: "Кто ваш начальник?",
     answers: ["Отвечает без запинки", "Иные варианты"],
-    correct: [1],
-    points: 1
+    correct: [1]
   },
   {
     text: "Ваша должность?",
     answers: ["Отвечает чётко и быстро", "Иные варианты"],
-    correct: [1],
-    points: 1
+    correct: [1]
   },
- {
+  {
     text: "Как ваше настроение?",
     answers: ["Хорошее", "Плохое"],
-    correct: [1],
-    points: 1
+    correct: [1]
   }
+  // ← добавляй новые вопросы сюда
 ];
+
+// =====================================================
+// НАСТРОЙКА ЦВЕТОВ: от скольки ДО скольки баллов какой цвет
+// Меняй только числа from/to. Порядок — от меньшего к большему.
+// =====================================================
+const colorRules = [
+  { from: 0,  to: 1,  bg: '#f8d7da', color: '#721c24', emoji: '🔴' }, // красный
+  { from: 2,  to: 5,  bg: '#fff3cd', color: '#856404', emoji: '🟡' }, // жёлтый
+  { from: 6,  to: 999, bg: '#d4edda', color: '#155724', emoji: '🟢' }  // зелёный
+];
+// =====================================================
 
 const form = document.getElementById('quiz');
 const resultEl = document.getElementById('result');
@@ -85,7 +93,7 @@ const resultEl = document.getElementById('result');
 questions.forEach((q, qi) => {
   const div = document.createElement('div');
   div.className = 'question';
-  let html = `<h3>${qi + 1}. ${q.text} <small>(${q.points} балл.)</small></h3>`;
+  let html = `<h3>${qi + 1}. ${q.text}</h3>`;
   q.answers.forEach((a, ai) => {
     html += `<label><input type="checkbox" name="q${qi}" value="${ai}"> <span>${a}</span></label>`;
   });
@@ -93,37 +101,28 @@ questions.forEach((q, qi) => {
   form.appendChild(div);
 });
 
-// Функция подсчёта и обновления результата
+// Подсчёт и подсветка
 function checkAnswers() {
-  resultEl.style.opacity = '1';   // возвращаем непрозрачность
+  resultEl.style.opacity = '1';
 
-  let total = 0, maxTotal = 0;
+  let total = 0, maxTotal = questions.length;
 
   questions.forEach((q, qi) => {
-    maxTotal += q.points;
     const checked = [...document.querySelectorAll(`input[name="q${qi}"]:checked`)]
                       .map(cb => parseInt(cb.value)).sort((a,b)=>a-b);
     const correct = [...q.correct].sort((a,b)=>a-b);
     const isRight = checked.length === correct.length &&
                     checked.every((v, i) => v === correct[i]);
-    if (isRight) total += q.points;
+    if (isRight) total += 1;   // каждый вопрос = 1 балл
   });
 
-  const missed = maxTotal - total;
-  const half = maxTotal / 2;
-  let bg, color, emoji;
+  // Ищем подходящий диапазон
+  const rule = colorRules.find(r => total >= r.from && total <= r.to)
+               || colorRules[colorRules.length - 1]; // если ничего не нашли — последний
 
-  if (missed <= 1) {
-    bg = '#d4edda'; color = '#155724'; emoji = '🟢';
-  } else if (total >= half - 1 && total > 1) {
-    bg = '#fff3cd'; color = '#856404'; emoji = '🟡';
-  } else {
-    bg = '#f8d7da'; color = '#721c24'; emoji = '🔴';
-  }
-
-  resultEl.innerHTML = `${emoji} Результат: ${total} из ${maxTotal} баллов`;
-  resultEl.style.background = bg;
-  resultEl.style.color = color;
+  resultEl.innerHTML = `${rule.emoji} Результат: ${total} из ${maxTotal}`;
+  resultEl.style.background = rule.bg;
+  resultEl.style.color = rule.color;
 
   resultEl.classList.remove('flash');
   void resultEl.offsetWidth;
@@ -139,20 +138,11 @@ function resetQuiz() {
   resultEl.style.opacity = '1';
 }
 
-// Если поменял ответы после проверки — старый результат бледнеет
 form.addEventListener('change', () => {
   if (resultEl.innerHTML) {
     resultEl.style.opacity = '0.5';
   }
 });
-
-// При новом нажатии "Проверить" возвращаем непрозрачность
-const originalCheck = checkAnswers;
-checkAnswers = function() {
-  resultEl.style.opacity = '1';
-  originalCheck();
-};
 </script>
-
 </body>
 </html>
