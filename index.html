@@ -95,6 +95,8 @@ questions.forEach((q, qi) => {
 
 // Функция подсчёта и обновления результата
 function checkAnswers() {
+  resultEl.style.opacity = '1';   // возвращаем непрозрачность
+
   let total = 0, maxTotal = 0;
 
   questions.forEach((q, qi) => {
@@ -119,14 +121,12 @@ function checkAnswers() {
     bg = '#f8d7da'; color = '#721c24'; emoji = '🔴';
   }
 
-  // Обновляем результат при каждом нажатии
   resultEl.innerHTML = `${emoji} Результат: ${total} из ${maxTotal} баллов`;
   resultEl.style.background = bg;
   resultEl.style.color = color;
 
-  // Небольшая анимация, чтобы было видно обновление
   resultEl.classList.remove('flash');
-  void resultEl.offsetWidth; // перезапуск анимации
+  void resultEl.offsetWidth;
   resultEl.classList.add('flash');
   setTimeout(() => resultEl.classList.remove('flash'), 200);
 }
@@ -136,11 +136,10 @@ function resetQuiz() {
   resultEl.innerHTML = '';
   resultEl.style.background = '';
   resultEl.style.color = '';
-  lastTotal = null;
+  resultEl.style.opacity = '1';
 }
 
-// Бонус: если поменял ответы после проверки — старый результат бледнеет,
-// показывая, что он устарел
+// Если поменял ответы после проверки — старый результат бледнеет
 form.addEventListener('change', () => {
   if (resultEl.innerHTML) {
     resultEl.style.opacity = '0.5';
