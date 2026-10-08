@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Чек-лист психического здоровья — ПОЛИЦИЯ</title>
+<title>Чек-лист психического здоровья — EMS</title>
 <style>
   * { box-sizing: border-box; }
   body {
@@ -56,6 +56,7 @@
   button:active { background: #45a049; }
   button.secondary { background: #888; margin-top: 8px; }
   button.copy-btn { background: #5865F2; margin-top: 15px; }
+  button.img-btn { background: #e67e22; margin-top: 8px; }
 
   #result {
     margin-top: 20px; padding: 20px; border-radius: 10px;
@@ -89,12 +90,119 @@
     text-align: center; color: #4CAF50; font-weight: bold;
     margin-top: 10px; font-size: 15px; min-height: 20px;
   }
+
+  /* ===== СКРЫТЫЙ БЛОК ДЛЯ ГЕНЕРАЦИИ КАРТИНКИ ===== */
+  #certImage {
+    position: fixed;
+    left: -9999px;
+    top: 0;
+    width: 700px;
+    background: #ffffff;
+    padding: 40px 50px;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    color: #1a1a1a;
+  }
+    #certImage .ci-header {
+    position: relative;
+    border-bottom: 3px double #1a3a6c;
+    padding-bottom: 20px;
+    margin-bottom: 25px;
+    min-height: 110px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #certImage .ci-logo {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100px;
+    height: 100px;
+  }
+  #certImage .ci-header-text {
+    text-align: center;
+  }
+  #certImage .ci-org {
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: #1a3a6c;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  #certImage .ci-title {
+    font-size: 26px;
+    font-weight: bold;
+    color: #1a3a6c;
+    letter-spacing: 2px;
+    margin-bottom: 4px;
+  }
+  #certImage .ci-subtitle {
+    font-size: 13px;
+    color: #666;
+    font-style: italic;
+  }
+  #certImage .ci-body {
+    font-size: 17px;
+    line-height: 1.8;
+    margin-bottom: 30px;
+  }
+  #certImage .ci-row {
+    margin-bottom: 12px;
+  }
+  #certImage .ci-label {
+    color: #555;
+    font-size: 14px;
+  }
+  #certImage .ci-value {
+    font-weight: bold;
+    color: #1a1a1a;
+  }
+  #certImage .ci-state {
+    font-size: 20px;
+    font-weight: bold;
+    padding: 4px 0;
+    display: inline-block;
+    margin: 6px 0;
+  }
+  #certImage .ci-verdict {
+    font-size: 18px;
+    font-style: italic;
+    margin-top: 12px;
+    padding: 12px 20px;
+    border-left: 4px solid #1a3a6c;
+    background: #f0f4fa;
+  }
+  #certImage .ci-footer {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #ccc;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    font-size: 14px;
+  }
+  #certImage .ci-sign-line {
+    border-bottom: 1px solid #1a1a1a;
+    min-width: 200px;
+    padding-bottom: 3px;
+    margin-bottom: 5px;
+    font-family: 'Georgia', serif;
+    font-style: italic;
+    font-size: 16px;
+  }
+  #certImage .ci-date {
+    color: #555;
+    font-size: 13px;
+    text-align: right;
+  }
 </style>
 </head>
 <body>
 
 <h1>Чек-лист психического здоровья</h1>
-<div class="subtitle">Фракция ПОЛИЦИЯ</div>
+<div class="subtitle">Emergency Medical Service</div>
 
 <div class="patient-fields">
   <label for="patientName">Имя и фамилия пациента:</label>
@@ -114,8 +222,45 @@
   <div class="cert-body" id="certBody"></div>
   <div class="cert-sign" id="certSign"></div>
 </div>
+
 <button class="copy-btn" id="copyBtn" onclick="copyCertificate()" style="display:none;">📋 Скопировать для Discord</button>
+<button class="img-btn" id="imgBtn" onclick="copyCertificateAsImage()" style="display:none;">🖼️ Скопировать картинкой</button>
 <div class="copy-status" id="copyStatus"></div>
+
+<!-- ===== СКРЫТЫЙ БЛОК ДЛЯ ГЕНЕРАЦИИ КАРТИНКИ ===== -->
+<div id="certImage">
+  <div class="ci-header">
+    <img class="ci-logo" alt="Звезда жизни" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512' width='512' height='512'><g transform='translate(0,512) scale(0.1,-0.1)' fill='%23000000'><path d='M1928 4341 l-3 -589 -522 339 c-287 186 -526 339 -531 339 -6 0 -155 -223 -332 -496 -265 -409 -320 -498 -309 -509 8 -6 284 -187 614 -400 330 -214 604 -392 608 -395 5 -4 -254 -184 -575 -400 -321 -216 -589 -398 -595 -404 -10 -9 63 -124 320 -504 182 -270 334 -492 338 -492 3 0 225 149 495 330 l489 331 3 -601 2 -600 600 0 600 0 2 624 3 624 483 -314 c266 -173 487 -314 492 -314 4 0 153 224 330 497 312 480 322 497 303 512 -11 9 -263 174 -561 366 -297 193 -541 353 -541 356 -1 3 258 181 574 394 316 213 575 389 575 390 0 7 -663 981 -669 983 -4 1 -228 -146 -497 -327 l-489 -330 -3 590 -2 589 -600 0 -600 0 -2 -589z m1122 -102 l5 -636 530 358 c292 197 532 359 535 359 11 0 571 -873 567 -883 -3 -7 -123 -92 -268 -190 -145 -98 -403 -272 -572 -387 -170 -114 -313 -212 -318 -217 -5 -5 215 -154 534 -361 298 -194 555 -363 571 -375 l29 -24 -282 -419 c-156 -230 -289 -425 -296 -432 -15 -16 20 -38 -585 355 l-435 283 -3 -660 -2 -660 -530 0 -530 0 0 631 c0 501 -3 630 -12 626 -15 -6 -921 -616 -987 -665 -36 -26 -47 -30 -57 -20 -6 7 -136 205 -288 440 l-277 428 23 24 c13 13 279 196 593 406 314 211 574 386 578 390 6 6 -1074 716 -1246 819 -21 13 -34 27 -30 33 51 84 577 855 587 862 9 7 168 -95 557 -358 l544 -367 2 628 c2 346 5 634 8 641 3 10 114 12 527 10 l523 -3 5 -636z'/><path d='M2058 4163 l-3 -648 -32 -3 c-23 -2 -33 1 -33 10 0 8 -8 14 -17 14 -10 0 -250 157 -533 348 -283 192 -520 349 -527 350 -16 1 -527 -755 -516 -764 4 -4 285 -187 623 -406 338 -219 625 -410 638 -423 12 -14 21 -29 19 -34 -3 -10 -225 -162 -872 -597 -184 -124 -333 -229 -332 -233 9 -31 494 -765 504 -762 6 2 240 158 519 347 279 189 519 349 533 357 22 12 26 12 43 -9 13 -16 16 -26 8 -34 -7 -7 -10 -215 -10 -633 l0 -623 460 0 460 0 0 671 0 671 38 -4 c28 -3 154 -80 532 -327 l494 -322 21 28 c11 15 127 186 257 380 l238 352 -43 29 c-23 16 -274 179 -557 362 -283 183 -525 344 -537 359 -18 20 -20 28 -10 37 6 6 274 188 595 403 320 216 582 395 582 398 0 12 -493 763 -500 763 -9 0 -1024 -682 -1051 -706 -8 -8 -28 -14 -42 -14 l-27 0 -2 653 -3 652 -457 3 -458 2 -2 -647z m521 380 c6 -21 11 -48 11 -59 0 -29 17 -34 105 -34 63 0 76 -3 85 -19 9 -18 6 -20 -27 -23 -33 -3 -38 -6 -38 -28 0 -22 5 -25 36 -28 33 -3 37 -6 41 -35 2 -18 1 -45 -2 -62 -6 -34 -27 -42 -122 -44 l-58 -1 0 -481 0 -481 50 -45 c262 -236 265 -900 5 -1182 l-55 -59 0 -503 c-1 -484 -7 -655 -30 -740 -10 -38 -12 -39 -55 -39 -32 0 -47 5 -54 18 -13 25 -31 161 -31 239 l0 65 -63 61 c-68 67 -120 156 -155 267 -104 325 -37 740 148 921 l60 59 0 418 0 418 -48 50 c-76 80 -145 231 -171 376 -55 309 20 643 177 797 55 54 59 61 66 115 9 84 18 96 71 96 42 0 44 -1 54 -37z'/><path d='M2396 4197 c-34 -44 -71 -128 -93 -207 -25 -91 -25 -328 0 -420 21 -78 78 -199 107 -225 l20 -18 0 451 c0 249 -2 452 -4 452 -3 0 -16 -15 -30 -33z'/><path d='M2610 2604 l1 -469 25 30 c36 43 79 129 106 215 20 66 23 95 23 235 0 140 -3 170 -23 235 -29 91 -65 159 -103 196 l-29 28 0 -470z'/><path d='M2390 2093 c-40 -45 -83 -135 -107 -223 -25 -91 -25 -328 0 -420 23 -88 79 -198 117 -235 l32 -30 -4 473 c-1 259 -4 472 -4 472 -1 0 -17 -17 -34 -37z'/></g></svg>">
+    <div class="ci-header-text">
+      <div class="ci-org">Emergency Medical Service</div>
+      <div class="ci-title">СПРАВКА</div>
+      <div class="ci-subtitle">о психическом состоянии сотрудника</div>
+    </div>
+  </div>
+
+  <div class="ci-body">
+    <div class="ci-row">
+      <span class="ci-label">Сотрудник:</span>
+      <span class="ci-value" id="ciPatient">—</span>
+    </div>
+    <div class="ci-row">
+      <span class="ci-label">Психическое состояние:</span>
+      <div class="ci-state" id="ciState">—</div>
+    </div>
+    <div class="ci-verdict" id="ciVerdict">—</div>
+  </div>
+
+  <div class="ci-footer">
+    <div>
+      <div class="ci-sign-line" id="ciDoctor">—</div>
+      <div class="ci-label">Подпись врача</div>
+    </div>
+    <div class="ci-date" id="ciDate">—</div>
+  </div>
+</div>
+
+<!-- Подключаем html2canvas через CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 <script>
 const questions = [
@@ -261,7 +406,8 @@ const colorRules = [
     label: 'Отстранение от службы',
     recommendation: 'Разбор со старшим составом департамента. Требуется повторная беседа и пересдача чек-листа.',
     certState: 'критическое',
-    certVerdict: 'Допуск к работе запрещён.'
+    certVerdict: 'Допуск к работе запрещён.',
+    imgStateColor: '#721c24'
   },
   {
     from: 9, to: 13,
@@ -269,7 +415,8 @@ const colorRules = [
     label: 'Только патруль под наблюдением',
     recommendation: 'Беседа с командиром подразделения. Ограничение самостоятельных действий до повторной проверки.',
     certState: 'среднее',
-    certVerdict: 'Только патруль без дальнейшего повышения.'
+    certVerdict: 'Только патруль без дальнейшего повышения.',
+    imgStateColor: '#8a5a00'
   },
   {
     from: 14, to: 17,
@@ -277,7 +424,8 @@ const colorRules = [
     label: 'Допуск с наставником',
     recommendation: 'Повторная проверка через 2 дня. Работа в паре с опытным офицером.',
     certState: 'удовлетворительное',
-    certVerdict: 'Допуск с наставником, с повторной проверкой через 2 дня.'
+    certVerdict: 'Допуск с наставником, с повторной проверкой через 2 дня.',
+    imgStateColor: '#856404'
   },
   {
     from: 18, to: 999,
@@ -285,7 +433,8 @@ const colorRules = [
     label: 'Полный допуск к службе',
     recommendation: 'Психологический профиль в норме. Офицер готов к самостоятельной службе.',
     certState: 'положительное',
-    certVerdict: 'К службе допущен полностью.'
+    certVerdict: 'К службе допущен полностью.',
+    imgStateColor: '#155724'
   }
 ];
 // =====================================================
@@ -296,6 +445,7 @@ const certEl = document.getElementById('certificate');
 const certBodyEl = document.getElementById('certBody');
 const certSignEl = document.getElementById('certSign');
 const copyBtn = document.getElementById('copyBtn');
+const imgBtn = document.getElementById('imgBtn');
 const copyStatus = document.getElementById('copyStatus');
 const patientInput = document.getElementById('patientName');
 const doctorInput = document.getElementById('doctorName');
@@ -327,7 +477,7 @@ questions.forEach((q, qi) => {
   form.appendChild(div);
 });
 
-// Приводит "иван петров" → "Иван Петров"
+// Приводит "иван петров" → "Иван Петров", "петров-сидоров" → "Петров-Сидоров"
 function capitalizeName(str) {
   return str
     .trim()
@@ -344,7 +494,6 @@ function capitalizeName(str) {
 function checkAnswers() {
   resultEl.style.opacity = '1';
 
-  // Проверка ФИО и нормализация регистра
   const patient = capitalizeName(patientInput.value);
   const doctor = capitalizeName(doctorInput.value);
 
@@ -353,7 +502,6 @@ function checkAnswers() {
     return;
   }
 
-  // Обновляем поля ввода — чтобы пользователь видел исправленный вариант
   patientInput.value = patient;
   doctorInput.value = doctor;
   localStorage.setItem('doctorName', doctor);
@@ -387,7 +535,7 @@ function checkAnswers() {
   resultEl.classList.add('flash');
   setTimeout(() => resultEl.classList.remove('flash'), 200);
 
-  // Генерируем справку (без строки с баллами)
+  // Текстовая справка (видимая на странице)
   const today = new Date().toLocaleDateString('ru-RU', {
     day: '2-digit', month: '2-digit', year: 'numeric'
   });
@@ -400,15 +548,27 @@ function checkAnswers() {
 
   certSignEl.textContent = `Подпись врача: ${doctor}`;
 
+  // Заполняем скрытый блок для картинки
+  document.getElementById('ciPatient').textContent = patient;
+  document.getElementById('ciDoctor').textContent = doctor;
+  document.getElementById('ciDate').textContent = `Дата осмотра: ${today}`;
+
+  const ciState = document.getElementById('ciState');
+  ciState.textContent = rule.certState;
+  ciState.style.color = rule.imgStateColor;
+
+  document.getElementById('ciVerdict').textContent = rule.certVerdict;
+
   certEl.classList.add('show');
   copyBtn.style.display = 'block';
+  imgBtn.style.display = 'block';
   copyStatus.textContent = '';
 }
 
 function copyCertificate() {
   const fullText =
     `📄 СПРАВКА О ПСИХИЧЕСКОМ СОСТОЯНИИ\n` +
-    `Фракция: ПОЛИЦИЯ\n` +
+    `Emergency Medical Service\n` +
     `─────────────────────\n` +
     certBodyEl.textContent + `\n` +
     `─────────────────────\n` +
@@ -431,6 +591,43 @@ function copyCertificate() {
     });
 }
 
+function copyCertificateAsImage() {
+  const certImg = document.getElementById('certImage');
+
+  html2canvas(certImg, {
+    backgroundColor: '#ffffff',
+    scale: 2,
+    useCORS: true,
+    logging: false
+  }).then(canvas => {
+    canvas.toBlob(blob => {
+      if (navigator.clipboard && window.ClipboardItem) {
+        navigator.clipboard.write([
+          new ClipboardItem({ 'image/png': blob })
+        ]).then(() => {
+          copyStatus.textContent = '✅ Картинка скопирована! Вставь в Discord (Ctrl+V).';
+          setTimeout(() => copyStatus.textContent = '', 4000);
+        }).catch(() => {
+          downloadCanvas(canvas);
+        });
+      } else {
+        downloadCanvas(canvas);
+      }
+    }, 'image/png');
+  }).catch(err => {
+    alert('Не удалось создать картинку: ' + err.message);
+  });
+}
+
+function downloadCanvas(canvas) {
+  const link = document.createElement('a');
+  link.download = 'справка_психическое_состояние.png';
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+  copyStatus.textContent = '💾 Картинка скачана файлом (буфер недоступен).';
+  setTimeout(() => copyStatus.textContent = '', 4000);
+}
+
 function resetQuiz() {
   document.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = false);
   resultEl.innerHTML = '';
@@ -439,6 +636,7 @@ function resetQuiz() {
   resultEl.style.opacity = '1';
   certEl.classList.remove('show');
   copyBtn.style.display = 'none';
+  imgBtn.style.display = 'none';
   copyStatus.textContent = '';
 }
 
