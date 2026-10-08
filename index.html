@@ -264,9 +264,6 @@
   </div>
 </div>
 
-<!-- Подключаем html2canvas через CDN -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
 <script>
 // ===== Прокрутка наверх при загрузке / перезагрузке =====
 if ('scrollRestoration' in history) {
@@ -278,6 +275,16 @@ window.addEventListener('load', () => {
 window.addEventListener('pageshow', () => {
   window.scrollTo(0, 0);
 });
+
+// ===== Определяем, телефон это или нет =====
+const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+
+// На телефонах удаляем скрытый блок для картинки из DOM,
+// чтобы не тратить память и не рендерить лишнее
+if (isMobile) {
+  const certImageEl = document.getElementById('certImage');
+  if (certImageEl) certImageEl.remove();
+}
 
 const questions = [
   // ===== БЛОК 1 =====
@@ -413,8 +420,8 @@ const questions = [
 // =====================================================
 // НАСТРОЙКА ПОДСЧЁТА
 // =====================================================
-const SITUATIONS_START = 20;   // индекс, с которого начинаются ситуации
-const MAX_SCORE = 20;          // максимум итогового балла (не превышается)
+const SITUATIONS_START = 20;
+const MAX_SCORE = 20;
 
 // =====================================================
 // НАСТРОЙКА ЦВЕТОВ, РЕКОМЕНДАЦИЙ И ТЕКСТА СПРАВКИ
@@ -461,7 +468,6 @@ const colorRules = [
 
 const form = document.getElementById('quiz');
 const resultEl = document.getElementById('result');
-const certEl = document.getElementById('certificate');
 const certBodyEl = document.getElementById('certBody');
 const certSignEl = document.getElementById('certSign');
 const copyStatus = document.getElementById('copyStatus');
@@ -524,8 +530,8 @@ function checkAnswers() {
   doctorInput.value = doctor;
   localStorage.setItem('doctorName', doctor);
 
-  let mainScore = 0;        // баллы за основные 20 вопросов
-  let situationScore = 0;   // баллы за вариативные ситуации
+  let mainScore = 0;
+  let situationScore = 0;
 
   questions.forEach((q, qi) => {
     const checked = [...document.querySelectorAll(`input[name="q${qi}"]:checked`)]
@@ -543,7 +549,6 @@ function checkAnswers() {
     }
   });
 
-  // Итог = основные + ситуации, но не больше MAX_SCORE
   const total = Math.min(mainScore + situationScore, MAX_SCORE);
   const maxTotal = MAX_SCORE;
 
@@ -564,7 +569,7 @@ function checkAnswers() {
   resultEl.classList.add('flash');
   setTimeout(() => resultEl.classList.remove('flash'), 200);
 
-  // Текстовая справка (видимая на странице)
+  // Текстовая справка
   const today = new Date().toLocaleDateString('ru-RU', {
     day: '2-digit', month: '2-digit', year: 'numeric'
   });
@@ -577,18 +582,25 @@ function checkAnswers() {
 
   certSignEl.textContent = `Подпись врача: ${doctor}`;
 
-  // Заполняем скрытый блок для картинки
-  document.getElementById('ciPatient').textContent = patient;
-  document.getElementById('ciDoctor').textContent = doctor;
-  document.getElementById('ciDate').textContent = `Дата осмотра: ${today}`;
+  // Заполняем скрытый блок для картинки (только на десктопе — на телефоне блок удалён)
+  if (!isMobile) {
+    const ciPatient = document.getElementById('ciPatient');
+    const ciDoctor = document.getElementById('ciDoctor');
+    const ciDate = document.getElementById('ciDate');
+    const ciState = document.getElementById('ciState');
+    const ciVerdict = document.getElementById('ciVerdict');
 
-  const ciState = document.getElementById('ciState');
-  ciState.textContent = rule.certState;
-  ciState.style.color = rule.imgStateColor;
+    if (ciPatient) ciPatient.textContent = patient;
+    if (ciDoctor) ciDoctor.textContent = doctor;
+    if (ciDate) ciDate.textContent = `Дата осмотра: ${today}`;
+    if (ciState) {
+      ciState.textContent = rule.certState;
+      ciState.style.color = rule.imgStateColor;
+    }
+    if (ciVerdict) ciVerdict.textContent = rule.certVerdict;
+  }
 
-  document.getElementById('ciVerdict').textContent = rule.certVerdict;
-
-  // Скрываем старую справку (если была) и показываем кнопку генерации
+  // Скрываем справку и показываем кнопку генерации
   document.getElementById('certWrapper').style.display = 'none';
   document.getElementById('genBtn').style.display = 'block';
   copyStatus.textContent = '';
@@ -599,7 +611,12 @@ function generateCertificate() {
   document.getElementById('certWrapper').style.display = 'block';
   document.getElementById('genBtn').style.display = 'none';
 
-  // Прокрутить к справке
+  // На телефонах скрываем кнопку «Скопировать картинкой»
+  if (isMobile) {
+    const imgBtn = document.getElementById('imgBtn');
+    if (imgBtn) imgBtn.style.display = 'none';
+  }
+
   setTimeout(() => {
     document.getElementById('certificate').scrollIntoView({
       behavior: 'smooth',
@@ -635,7 +652,28 @@ function copyCertificate() {
 }
 
 function copyCertificateAsImage() {
+  // На телефонах функция не должна вызываться, но на всякий случай проверим
+  if (isMobile) return;
+
+  // Если html2canvas ещё не загружена — загружаем её динамически
+  if (typeof html2canvas === 'undefined') {
+    copyStatus.textContent = '⏳ Загружаем модуль для картинки...';
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+    script.onload = () => {
+      copyStatus.textContent = '';
+      copyCertificateAsImage();
+    };
+    script.onerror = () => {
+      copyStatus.textContent = '';
+      alert('Не удалось загрузить модуль. Проверь соединение с интернетом.');
+    };
+    document.head.appendChild(script);
+    return;
+  }
+
   const certImg = document.getElementById('certImage');
+  if (!certImg) return;
 
   html2canvas(certImg, {
     backgroundColor: '#ffffff',
@@ -678,7 +716,6 @@ function resetQuiz() {
   resultEl.style.color = '';
   resultEl.style.opacity = '1';
 
-  // Скрываем справку и кнопку генерации
   document.getElementById('certWrapper').style.display = 'none';
   document.getElementById('genBtn').style.display = 'none';
   copyStatus.textContent = '';
