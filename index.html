@@ -260,7 +260,6 @@ const colorRules = [
     bg: '#f8d7da', color: '#721c24', emoji: '🔴',
     label: 'Отстранение от службы',
     recommendation: 'Разбор со старшим составом департамента. Требуется повторная беседа и пересдача чек-листа.',
-    // Текст для справки:
     certState: 'критическое',
     certVerdict: 'Допуск к работе запрещён.'
   },
@@ -301,7 +300,7 @@ const copyStatus = document.getElementById('copyStatus');
 const patientInput = document.getElementById('patientName');
 const doctorInput = document.getElementById('doctorName');
 
-// Запоминаем имя врача в браузере — чтобы не вводить каждый раз
+// Запоминаем имя врача в браузере
 doctorInput.value = localStorage.getItem('doctorName') || '';
 doctorInput.addEventListener('input', () => {
   localStorage.setItem('doctorName', doctorInput.value);
@@ -328,17 +327,32 @@ questions.forEach((q, qi) => {
   form.appendChild(div);
 });
 
+// Приводит "иван петров" → "Иван Петров"
+function capitalizeName(str) {
+  return str
+    .trim()
+    .toLowerCase()
+    .split(/\s+/)
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
 function checkAnswers() {
   resultEl.style.opacity = '1';
 
-  // Проверка ФИО
-  const patient = patientInput.value.trim();
-  const doctor = doctorInput.value.trim();
+  // Проверка ФИО и нормализация регистра
+  const patient = capitalizeName(patientInput.value);
+  const doctor = capitalizeName(doctorInput.value);
 
   if (!patient || !doctor) {
     alert('Пожалуйста, заполните имя пациента и имя врача перед проверкой.');
     return;
   }
+
+  // Обновляем поля ввода — чтобы пользователь видел исправленный вариант
+  patientInput.value = patient;
+  doctorInput.value = doctor;
+  localStorage.setItem('doctorName', doctor);
 
   let total = 0;
   const maxTotal = MAIN_QUESTIONS_COUNT;
@@ -369,7 +383,7 @@ function checkAnswers() {
   resultEl.classList.add('flash');
   setTimeout(() => resultEl.classList.remove('flash'), 200);
 
-  // Генерируем справку
+  // Генерируем справку (без строки с баллами)
   const today = new Date().toLocaleDateString('ru-RU', {
     day: '2-digit', month: '2-digit', year: 'numeric'
   });
@@ -402,7 +416,6 @@ function copyCertificate() {
       setTimeout(() => copyStatus.textContent = '', 3000);
     })
     .catch(() => {
-      // Fallback для старых браузеров
       const ta = document.createElement('textarea');
       ta.value = fullText;
       document.body.appendChild(ta);
