@@ -957,6 +957,12 @@
       }
       const cia = document.getElementById('ciStampArea');
       if (cia) cia.innerHTML = '';
+
+      // Сброс имени пациента
+      patientInput.value = '';
+
+      // Прокрутка наверх
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     form.addEventListener('change', () => {
