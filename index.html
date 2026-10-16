@@ -145,6 +145,28 @@
       margin-top: 8px;
     }
 
+    button.rp-btn {
+      background: #8e44ad;
+      margin-top: 8px;
+    }
+
+    button.do-btn {
+      background: #16a085;
+      margin-top: 8px;
+    }
+
+    .rp-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .rp-row button {
+      margin-top: 0;
+      font-size: 16px;
+      padding: 15px 10px;
+    }
+
     #result {
       margin-top: 20px;
       padding: 20px;
@@ -179,9 +201,7 @@
 
     #certificate {
       position: relative;
-      /* печать позиционируется внутри справки */
       cursor: crosshair;
-      /* подсказка, что можно кликнуть */
       margin-top: 20px;
       padding: 20px;
       border-radius: 10px;
@@ -192,7 +212,6 @@
       white-space: pre-wrap;
       line-height: 1.5;
       overflow: hidden;
-      /* печать не вылезает за пределы */
     }
 
     #certificate .cert-header {
@@ -223,7 +242,6 @@
       min-height: 20px;
     }
 
-    /* ===== ПЕЧАТЬ ===== */
     .stamp-img {
       position: absolute;
       width: 200px;
@@ -235,7 +253,6 @@
       z-index: 10;
     }
 
-    /* Оверлей поверх всей справки в скрытом блоке для скриншота */
     #ciStampArea {
       position: absolute;
       inset: 0;
@@ -248,7 +265,6 @@
       opacity: 0.9;
     }
 
-    /* ===== СКРЫТЫЙ БЛОК ДЛЯ ГЕНЕРАЦИИ КАРТИНКИ ===== */
     #certImage {
       position: fixed;
       left: -9999px;
@@ -403,6 +419,12 @@
 
     <button class="copy-btn" id="copyBtn" onclick="copyCertificate()">📋 Скопировать для Discord</button>
     <button class="img-btn" id="imgBtn" onclick="copyCertificateAsImage()">🖼️ Скопировать картинкой</button>
+
+    <div class="rp-row" id="rpRow" style="display:none;">
+      <button class="rp-btn" id="rpBtn" onclick="copyRoleplay()">🎭 Скопировать /me</button>
+      <button class="do-btn" id="doBtn" onclick="copyDo()">📝 Скопировать /do</button>
+    </div>
+
     <div class="copy-status" id="copyStatus"></div>
   </div>
 
@@ -456,12 +478,11 @@
     }
 
     // ===== ПЕЧАТЬ =====
-    const STAMP_SRC = 'stamp.svg';   // путь к файлу печати
-    let stampPos = null;             // { xPercent, yPercent }
+    const STAMP_SRC = 'stamp.svg';
+    let stampPos = null;
 
     const certEl = document.getElementById('certificate');
 
-    // На десктопе — клик по справке ставит печать
     if (!isMobile && certEl) {
       certEl.addEventListener('click', (e) => {
         const rect = certEl.getBoundingClientRect();
@@ -474,7 +495,6 @@
     function setStamp(xPercent, yPercent) {
       stampPos = { xPercent, yPercent };
 
-      // 1) Видимая справка — печать прямо внутри #certificate
       if (certEl) {
         let img = certEl.querySelector(':scope > .stamp-img');
         if (!img) {
@@ -488,7 +508,6 @@
         img.style.top = (yPercent * 100) + '%';
       }
 
-      // 2) Скрытый блок для картинки
       renderStampInImage();
     }
 
@@ -732,6 +751,7 @@
     });
 
     let currentBlock = null;
+    let currentResult = null;
     questions.forEach((q, qi) => {
       if (q.block && q.block !== currentBlock) {
         currentBlock = q.block;
@@ -817,6 +837,8 @@
 
       certSignEl.textContent = `Подпись врача: ${doctor}`;
 
+      currentResult = { patient, doctor, rule };
+
       if (!isMobile) {
         const ciPatient = document.getElementById('ciPatient');
         const ciDoctor = document.getElementById('ciDoctor');
@@ -845,9 +867,14 @@
       document.getElementById('certWrapper').style.display = 'block';
       document.getElementById('genBtn').style.display = 'none';
 
+      const rpRow = document.getElementById('rpRow');
+
       if (isMobile) {
         const imgBtn = document.getElementById('imgBtn');
         if (imgBtn) imgBtn.style.display = 'none';
+        if (rpRow) rpRow.style.display = 'none';
+      } else {
+        if (rpRow) rpRow.style.display = 'flex';
       }
 
       setTimeout(() => {
@@ -866,19 +893,47 @@
         `─────────────────────\n` +
         certSignEl.textContent;
 
-      navigator.clipboard.writeText(fullText)
+      copyText(fullText, '✅ Скопировано! Вставь в Discord.');
+    }
+
+    function copyRoleplay() {
+      if (!currentResult) return;
+      const { patient, doctor, rule } = currentResult;
+
+      const stateMap = {
+        'положительное': 'положительное. К службе допущен полностью',
+        'удовлетворительное': 'удовлетворительное, допуск с наставником, с повторной проверкой через 2 дня',
+        'среднее': 'среднее. Только патруль без дальнейшего повышения',
+        'критическое': 'критическое. Допуск к работе запрещен'
+      };
+
+      const stateText = stateMap[rule.certState] || rule.certState;
+      const text = `/me Выдала справку человеку напротив с надписью "Выдана справка (${patient}). Психическое состояние ${stateText}. Подпись врача: ${doctor}"`;
+
+      copyText(text, '✅ Отыгровка скопирована!');
+    }
+
+    function copyDo() {
+      if (!currentResult) return;
+      const { patient } = currentResult;
+      const text = `/do Справка на руках (${patient})`;
+      copyText(text, '✅ /do скопировано!');
+    }
+
+    function copyText(text, successMessage) {
+      navigator.clipboard.writeText(text)
         .then(() => {
-          copyStatus.textContent = '✅ Скопировано! Вставь в Discord.';
+          copyStatus.textContent = successMessage;
           setTimeout(() => copyStatus.textContent = '', 3000);
         })
         .catch(() => {
           const ta = document.createElement('textarea');
-          ta.value = fullText;
+          ta.value = text;
           document.body.appendChild(ta);
           ta.select();
           document.execCommand('copy');
           document.body.removeChild(ta);
-          copyStatus.textContent = '✅ Скопировано! Вставь в Discord.';
+          copyStatus.textContent = successMessage;
           setTimeout(() => copyStatus.textContent = '', 3000);
         });
     }
@@ -949,7 +1004,11 @@
       document.getElementById('genBtn').style.display = 'none';
       copyStatus.textContent = '';
 
-      // Сброс печати
+      const rpRow = document.getElementById('rpRow');
+      if (rpRow) rpRow.style.display = 'none';
+
+      currentResult = null;
+
       stampPos = null;
       if (certEl) {
         const img = certEl.querySelector(':scope > .stamp-img');
@@ -958,10 +1017,8 @@
       const cia = document.getElementById('ciStampArea');
       if (cia) cia.innerHTML = '';
 
-      // Сброс имени пациента
       patientInput.value = '';
 
-      // Прокрутка наверх
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
