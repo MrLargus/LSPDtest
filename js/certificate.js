@@ -5,13 +5,16 @@ function generateCertificate() {
   const rpRow = document.getElementById('rpRow');
   const certImg = document.getElementById('certImage');
 
-  if (isMobile) {
+    if (isMobile) {
     const imgBtn = document.getElementById('imgBtn');
     if (imgBtn) imgBtn.style.display = 'none';
     if (rpRow) rpRow.style.display = 'none';
     
-    // Показываем справку на телефоне
-    if (certImg) certImg.classList.add('visible');
+    // Принудительно показываем справку на телефоне
+    if (certImg) {
+      certImg.classList.add('visible');
+      certImg.style.display = 'block';
+    }
   } else {
     if (rpRow) rpRow.style.display = 'grid';
     if (certImg) certImg.classList.add('visible');
