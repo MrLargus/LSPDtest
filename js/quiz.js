@@ -1,16 +1,14 @@
-const form = document.getElementById('quiz');
-const resultEl = document.getElementById('result');
-const patientInput = document.getElementById('patientName');
-const doctorInput = document.getElementById('doctorName');
-
 let currentResult = null;
 let currentTestType = 'normal';
 
 function buildQuiz(testType) {
-  form.innerHTML = '';
   currentTestType = testType;
+  const isNormal = testType === 'normal';
   
-  const questionsToUse = testType === 'normal' ? normalQuestions : specialQuestions;
+  const form = document.getElementById(isNormal ? 'quiz' : 'specialQuiz');
+  form.innerHTML = '';
+  
+  const questionsToUse = isNormal ? normalQuestions : specialQuestions;
   if (questionsToUse.length === 0) return;
 
   let currentBlock = null;
@@ -34,6 +32,11 @@ function buildQuiz(testType) {
 }
 
 function checkAnswers(testType) {
+  const isNormal = testType === 'normal';
+  const patientInput = document.getElementById(isNormal ? 'patientName' : 'specialPatientName');
+  const doctorInput = document.getElementById(isNormal ? 'doctorName' : 'specialDoctorName');
+  const resultEl = document.getElementById(isNormal ? 'result' : 'specialResult');
+  
   resultEl.style.opacity = '1';
 
   const patient = capitalizeName(patientInput.value);
@@ -46,11 +49,10 @@ function checkAnswers(testType) {
 
   patientInput.value = patient;
   doctorInput.value = doctor;
-  localStorage.setItem('doctorName', doctor);
+  if (isNormal) localStorage.setItem('doctorName', doctor);
 
-  const questionsToUse = testType === 'normal' ? normalQuestions : specialQuestions;
+  const questionsToUse = isNormal ? normalQuestions : specialQuestions;
   let mainScore = 0;
-  let situationScore = 0;
 
   questionsToUse.forEach((q, qi) => {
     const checked = [...document.querySelectorAll(`input[name="q${qi}"]:checked`)]
@@ -58,17 +60,19 @@ function checkAnswers(testType) {
     const correct = [...q.correct].sort((a, b) => a - b);
     const isRight = checked.length === correct.length &&
       checked.every((v, i) => v === correct[i]);
-    if (isRight) {
-      if (qi < SITUATIONS_START) mainScore += 1;
-      else situationScore += 1;
-    }
+    if (isRight) mainScore += 1;
   });
 
-  const maxPossible = Math.min(questionsToUse.length, MAX_SCORE);
-  const total = Math.min(mainScore + situationScore, maxPossible);
+  const maxPossible = questionsToUse.length;
+  const total = Math.min(mainScore, maxPossible);
   
-  const rule = colorRules.find(r => total >= r.from && total <= r.to)
-    || colorRules[colorRules.length - 1];
+  // Пересчитываем проценты под текущее количество вопросов
+  const percent = (total / maxPossible) * 100;
+  let rule;
+  if (percent < 45) rule = colorRules[0];
+  else if (percent < 70) rule = colorRules[1];
+  else if (percent < 90) rule = colorRules[2];
+  else rule = colorRules[3];
 
   resultEl.innerHTML = `
     <div class="score">${rule.emoji} Результат: ${total} из ${maxPossible}</div>
@@ -87,42 +91,55 @@ function checkAnswers(testType) {
     day: '2-digit', month: '2-digit', year: 'numeric'
   });
 
-  currentResult = { patient, doctor, rule };
+  currentResult = { patient, doctor, rule, testType };
 
-  
-      const ciPatient = document.getElementById('ciPatient');
-  const ciDoctor  = document.getElementById('ciDoctor');
-  const ciDate    = document.getElementById('ciDate');
-  const ciState   = document.getElementById('ciState');
-  const ciVerdict = document.getElementById('ciVerdict');
-
-  if (ciPatient) ciPatient.textContent = patient;
-  if (ciDoctor)  ciDoctor.textContent  = doctor;
-  if (ciDate)    ciDate.textContent    = `Дата осмотра: ${today}`;
-  if (ciState) {
+  // Заполняем справку в зависимости от теста
+  if (isNormal) {
+    document.getElementById('ciPatient').textContent = patient;
+    document.getElementById('ciDoctor').textContent = doctor;
+    document.getElementById('ciDate').textContent = `Дата осмотра: ${today}`;
+    const ciState = document.getElementById('ciState');
     ciState.textContent = rule.certState;
     ciState.style.color = rule.imgStateColor;
+    document.getElementById('ciVerdict').textContent = rule.certVerdict;
+    renderStampInImage('certImage');
+  } else {
+    document.getElementById('specialCiPatient').textContent = patient;
+    document.getElementById('specialCiDoctor').textContent = doctor;
+    document.getElementById('specialCiDate').textContent = `Дата осмотра: ${today}`;
+    const ciState = document.getElementById('specialCiState');
+    ciState.textContent = rule.certState;
+    ciState.style.color = rule.imgStateColor;
+    document.getElementById('specialCiVerdict').textContent = rule.certVerdict;
   }
-  if (ciVerdict) ciVerdict.textContent = rule.certVerdict;
 
-  renderStampInImage();
-  
-
-  document.getElementById('certWrapper').style.display = 'none';
-  document.getElementById('genBtn').style.display = 'block';
-  document.getElementById('copyStatus').textContent = '';
+  document.getElementById(isNormal ? 'certWrapper' : 'specialCertWrapper').style.display = 'none';
+  document.getElementById(isNormal ? 'genBtn' : 'specialGenBtn').style.display = 'block';
 }
 
 function resetQuiz() {
+  // Очищаем все чекбоксы на странице
   document.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = false);
-  resultEl.innerHTML = '';
-  resultEl.style.background = '';
-  resultEl.style.color = '';
-  resultEl.style.opacity = '1';
+  
+  ['result', 'specialResult'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.innerHTML = '';
+      el.style.background = '';
+      el.style.color = '';
+      el.style.opacity = '1';
+    }
+  });
 
-  document.getElementById('certWrapper').style.display = 'none';
-  document.getElementById('genBtn').style.display = 'none';
-  document.getElementById('copyStatus').textContent = '';
+  ['certWrapper', 'specialCertWrapper'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+  
+  ['genBtn', 'specialGenBtn'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
 
   const rpRow = document.getElementById('rpRow');
   if (rpRow) rpRow.style.display = 'none';
@@ -132,7 +149,11 @@ function resetQuiz() {
 
   currentResult = null;
   clearStamp();
-  patientInput.value = '';
+  
+  const p1 = document.getElementById('patientName');
+  const p2 = document.getElementById('specialPatientName');
+  if (p1) p1.value = '';
+  if (p2) p2.value = '';
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
