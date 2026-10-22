@@ -1,36 +1,43 @@
 function generateCertificate() {
   const isNormal = currentResult && currentResult.testType === 'normal';
+  const certWrapper = document.getElementById('certWrapper');
   
-  const wrapper = document.getElementById(isNormal ? 'certWrapper' : 'specialCertWrapper');
-  const genBtn = document.getElementById(isNormal ? 'genBtn' : 'specialGenBtn');
-  const certImg = document.getElementById(isNormal ? 'certImage' : 'specialCertImage');
-  
-  if (wrapper) wrapper.style.display = 'block';
-  if (genBtn) genBtn.style.display = 'none';
+  certWrapper.style.display = 'block';
+  document.getElementById(isNormal ? 'genBtn' : 'specialGenBtn').style.display = 'none';
 
-  if (certImg) certImg.classList.add('visible');
+  const rpRow = document.getElementById('rpRow');
+  const certImg = document.getElementById('certImage');
+
+  if (isMobile) {
+    const imgBtn = document.getElementById('imgBtn');
+    if (imgBtn) imgBtn.style.display = 'none';
+    if (rpRow) rpRow.style.display = 'none';
+    
+    if (certImg) {
+      certImg.classList.add('visible');
+      certImg.style.display = 'block';
+    }
+  } else {
+    if (rpRow) rpRow.style.display = 'grid';
+    if (certImg) certImg.classList.add('visible');
+  }
 
   setTimeout(() => {
-    if (wrapper) {
-      wrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (certWrapper) {
+      certWrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }, 50);
 }
 
 function copyCertificate() {
-  if (!currentResult) return;
-  
-  const isNormal = currentResult.testType === 'normal';
-  const patient = document.getElementById(isNormal ? 'ciPatient' : 'specialCiPatient').textContent;
-  const state = document.getElementById(isNormal ? 'ciState' : 'specialCiState').textContent;
-  const verdict = document.getElementById(isNormal ? 'ciVerdict' : 'specialCiVerdict').textContent;
-  const doctor = document.getElementById(isNormal ? 'ciDoctor' : 'specialCiDoctor').textContent;
-  const date = document.getElementById(isNormal ? 'ciDate' : 'specialCiDate').textContent;
-  
-  const testName = isNormal ? 'Стандартный тест' : 'Углублённый тест';
+  const patient = document.getElementById('ciPatient').textContent;
+  const state = document.getElementById('ciState').textContent;
+  const verdict = document.getElementById('ciVerdict').textContent;
+  const doctor = document.getElementById('ciDoctor').textContent;
+  const date = document.getElementById('ciDate').textContent;
 
   const fullText =
-    `📄 СПРАВКА О ПСИХИЧЕСКОМ СОСТОЯНИИ (${testName})\n` +
+    `📄 СПРАВКА О ПСИХИЧЕСКОМ СОСТОЯНИИ\n` +
     `Emergency Medical Service\n` +
     `─────────────────────\n` +
     `Справка на имя: ${patient}.\n` +
@@ -90,7 +97,6 @@ function copyCertificateAsImage() {
   const certImg = document.getElementById('certImage');
   if (!certImg) return;
 
-  // Временно скрываем подсказку для печати, чтобы она не попала на картинку
   certImg.classList.add('rendering');
 
   html2canvas(certImg, {
@@ -100,7 +106,7 @@ function copyCertificateAsImage() {
     allowTaint: true,
     logging: false
   }).then(canvas => {
-    certImg.classList.remove('rendering'); // Возвращаем подсказку обратно
+    certImg.classList.remove('rendering');
     
     canvas.toBlob(blob => {
       if (navigator.clipboard && window.ClipboardItem) {
