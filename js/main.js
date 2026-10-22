@@ -9,10 +9,24 @@ const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
 document.addEventListener('DOMContentLoaded', () => {
   initStamp();
 
-  const doctorInput = document.getElementById('doctorName');
-  doctorInput.value = localStorage.getItem('doctorName') || '';
-  doctorInput.addEventListener('input', () => {
-    localStorage.setItem('doctorName', doctorInput.value);
+  // Синхронизация имени врача
+  const doctorInputs = document.querySelectorAll('.doctor-input');
+  const savedDoctor = localStorage.getItem('doctorName') || '';
+
+  doctorInputs.forEach(input => {
+    input.value = savedDoctor;
+
+    input.addEventListener('input', (e) => {
+      const val = e.target.value;
+      // Сохраняем в память
+      localStorage.setItem('doctorName', val);
+      // Обновляем значение во всех остальных полях ввода врача
+      doctorInputs.forEach(otherInput => {
+        if (otherInput !== input) {
+          otherInput.value = val;
+        }
+      });
+    });
   });
 });
 
