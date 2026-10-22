@@ -53,20 +53,35 @@ function checkAnswers(testType) {
 
   const questionsToUse = isNormal ? normalQuestions : specialQuestions;
   let mainScore = 0;
+  let bonusScore = 0;
 
+  // Считаем баллы
   questionsToUse.forEach((q, qi) => {
     const checked = [...document.querySelectorAll(`input[name="q${qi}"]:checked`)]
       .map(cb => parseInt(cb.value)).sort((a, b) => a - b);
     const correct = [...q.correct].sort((a, b) => a - b);
     const isRight = checked.length === correct.length &&
       checked.every((v, i) => v === correct[i]);
-    if (isRight) mainScore += 1;
+      
+    if (isRight) {
+      // Если вопрос из блока "ДОПОЛНИТЕЛЬНЫЙ ТЕСТ", добавляем в бонусы
+      if (q.block && q.block.includes("ДОПОЛНИТЕЛЬНЫЙ ТЕСТ")) {
+        bonusScore += 1;
+      } else {
+        mainScore += 1;
+      }
+    }
   });
 
-  const maxPossible = questionsToUse.length;
-  const total = Math.min(mainScore, maxPossible);
+  // Считаем максимально возможный балл за основные вопросы (без доп. блока)
+  const baseQuestionsCount = questionsToUse.filter(q => !q.block || !q.block.includes("ДОПОЛНИТЕЛЬНЫЙ ТЕСТ")).length;
   
-  const percent = (total / maxPossible) * 100;
+  // Итоговый балл не может превышать максимум основных вопросов
+  const total = Math.min(mainScore + bonusScore, baseQuestionsCount);
+  
+  // Считаем процент от основных вопросов
+  const percent = (total / baseQuestionsCount) * 100;
+  
   let rule;
   if (percent < 45) rule = colorRules[0];
   else if (percent < 70) rule = colorRules[1];
@@ -74,7 +89,7 @@ function checkAnswers(testType) {
   else rule = colorRules[3];
 
   resultEl.innerHTML = `
-    <div class="score">${rule.emoji} Результат: ${total} из ${maxPossible}</div>
+    <div class="score">${rule.emoji} Результат: ${total} из ${baseQuestionsCount}</div>
     <div class="label">${rule.label}</div>
     <div class="recommendation">${rule.recommendation}</div>
   `;
