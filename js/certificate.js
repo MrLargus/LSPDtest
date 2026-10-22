@@ -9,13 +9,16 @@ function generateCertificate() {
     const imgBtn = document.getElementById('imgBtn');
     if (imgBtn) imgBtn.style.display = 'none';
     if (rpRow) rpRow.style.display = 'none';
+    
+    // Показываем справку на телефоне
+    if (certImg) certImg.classList.add('visible');
   } else {
     if (rpRow) rpRow.style.display = 'grid';
     if (certImg) certImg.classList.add('visible');
   }
 
   setTimeout(() => {
-    const target = isMobile ? document.getElementById('certWrapper') : certImg;
+    const target = document.getElementById('certWrapper');
     if (target) {
       target.scrollIntoView({
         behavior: 'smooth', block: 'start'
