@@ -138,3 +138,37 @@
 #certImage.rendering::after {
   display: none;
 }
+
+@media (max-width: 768px) {
+  #certImage.visible {
+    width: 100%;
+    max-width: 100%;
+    padding: 20px 15px;
+    margin: 15px 0;
+    box-sizing: border-box;
+  }
+  
+  #certImage .ci-header {
+    flex-direction: column;
+    text-align: center;
+    padding-bottom: 15px;
+  }
+  
+  #certImage .ci-logo {
+    position: static;
+    transform: none;
+    margin-bottom: 15px;
+    width: 70px;
+    height: 70px;
+  }
+
+  #certImage .ci-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  
+  #certImage .ci-date {
+    text-align: left;
+  }
+}
