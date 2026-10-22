@@ -37,6 +37,10 @@ function checkAnswers(testType) {
   const doctorInput = document.getElementById(isNormal ? 'doctorName' : 'specialDoctorName');
   const resultEl = document.getElementById(isNormal ? 'result' : 'specialResult');
   
+  // Определяем, в какой именно форме искать ответы
+  const formId = isNormal ? 'quiz' : 'specialQuiz';
+  const formContainer = document.getElementById(formId);
+
   resultEl.style.opacity = '1';
 
   const patient = capitalizeName(patientInput.value);
@@ -57,8 +61,10 @@ function checkAnswers(testType) {
 
   // Считаем баллы
   questionsToUse.forEach((q, qi) => {
-    const checked = [...document.querySelectorAll(`input[name="q${qi}"]:checked`)]
+    // Ищем ответы ТОЛЬКО внутри текущей формы
+    const checked = [...formContainer.querySelectorAll(`input[name="q${qi}"]:checked`)]
       .map(cb => parseInt(cb.value)).sort((a, b) => a - b);
+      
     const correct = [...q.correct].sort((a, b) => a - b);
     const isRight = checked.length === correct.length &&
       checked.every((v, i) => v === correct[i]);
@@ -121,7 +127,6 @@ function checkAnswers(testType) {
   document.getElementById('certWrapper').style.display = 'none';
   document.getElementById(isNormal ? 'genBtn' : 'specialGenBtn').style.display = 'block';
 }
-
 function resetQuiz() {
   document.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = false);
   
