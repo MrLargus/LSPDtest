@@ -66,7 +66,6 @@ function checkAnswers(testType) {
   const maxPossible = questionsToUse.length;
   const total = Math.min(mainScore, maxPossible);
   
-  // Пересчитываем проценты под текущее количество вопросов
   const percent = (total / maxPossible) * 100;
   let rule;
   if (percent < 45) rule = colorRules[0];
@@ -93,32 +92,22 @@ function checkAnswers(testType) {
 
   currentResult = { patient, doctor, rule, testType };
 
-  // Заполняем справку в зависимости от теста
-  if (isNormal) {
-    document.getElementById('ciPatient').textContent = patient;
-    document.getElementById('ciDoctor').textContent = doctor;
-    document.getElementById('ciDate').textContent = `Дата осмотра: ${today}`;
-    const ciState = document.getElementById('ciState');
-    ciState.textContent = rule.certState;
-    ciState.style.color = rule.imgStateColor;
-    document.getElementById('ciVerdict').textContent = rule.certVerdict;
-    renderStampInImage('certImage');
-  } else {
-    document.getElementById('specialCiPatient').textContent = patient;
-    document.getElementById('specialCiDoctor').textContent = doctor;
-    document.getElementById('specialCiDate').textContent = `Дата осмотра: ${today}`;
-    const ciState = document.getElementById('specialCiState');
-    ciState.textContent = rule.certState;
-    ciState.style.color = rule.imgStateColor;
-    document.getElementById('specialCiVerdict').textContent = rule.certVerdict;
-  }
+  document.getElementById('ciPatient').textContent = patient;
+  document.getElementById('ciDoctor').textContent = doctor;
+  document.getElementById('ciDate').textContent = `Дата осмотра: ${today}`;
+  
+  const ciState = document.getElementById('ciState');
+  ciState.textContent = rule.certState;
+  ciState.style.color = rule.imgStateColor;
+  document.getElementById('ciVerdict').textContent = rule.certVerdict;
 
-  document.getElementById(isNormal ? 'certWrapper' : 'specialCertWrapper').style.display = 'none';
+  renderStampInImage();
+
+  document.getElementById('certWrapper').style.display = 'none';
   document.getElementById(isNormal ? 'genBtn' : 'specialGenBtn').style.display = 'block';
 }
 
 function resetQuiz() {
-  // Очищаем все чекбоксы на странице
   document.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = false);
   
   ['result', 'specialResult'].forEach(id => {
@@ -131,15 +120,10 @@ function resetQuiz() {
     }
   });
 
-  ['certWrapper', 'specialCertWrapper'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.style.display = 'none';
-  });
-  
-  ['genBtn', 'specialGenBtn'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.style.display = 'none';
-  });
+  document.getElementById('certWrapper').style.display = 'none';
+  document.getElementById('genBtn').style.display = 'none';
+  document.getElementById('specialGenBtn').style.display = 'none';
+  document.getElementById('copyStatus').textContent = '';
 
   const rpRow = document.getElementById('rpRow');
   if (rpRow) rpRow.style.display = 'none';
