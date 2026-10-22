@@ -50,7 +50,7 @@
         <label for="patientName">Имя и фамилия сотрудника:</label>
         <input type="text" id="patientName" placeholder="Например: Иван Петров" autocomplete="off">
 
-                <label for="doctorName">Имя и фамилия врача:</label>
+        <label for="doctorName">Имя и фамилия врача:</label>
         <input type="text" id="doctorName" class="doctor-input" placeholder="Например: Александр Смирнов" autocomplete="off">
       </div>
 
@@ -66,55 +66,9 @@
       <button class="gen-btn" id="genBtn" onclick="generateCertificate()" style="display:none;">
         Сформировать справку
       </button>
-
-      <div id="certWrapper" style="display:none;">
-        <div id="certImage">
-          <div id="ciStampArea"></div>
-          <div class="ci-header">
-            <img class="ci-logo" alt="Звезда жизни" src="assets/logo-star.svg">
-            <div class="ci-header-text">
-              <div class="ci-org">Emergency Medical Service</div>
-              <div class="ci-title">СПРАВКА</div>
-              <div class="ci-subtitle">о психическом состоянии сотрудника</div>
-            </div>
-          </div>
-
-          <div class="ci-body">
-            <div class="ci-row">
-              <span class="ci-label">Сотрудник:</span>
-              <span class="ci-value" id="ciPatient">—</span>
-            </div>
-            <div class="ci-row">
-              <span class="ci-label">Психическое состояние:</span>
-              <div class="ci-state" id="ciState">—</div>
-            </div>
-            <div class="ci-verdict" id="ciVerdict">—</div>
-          </div>
-
-          <div class="ci-footer">
-            <div>
-              <div class="ci-sign-line" id="ciDoctor">—</div>
-              <div class="ci-label">Подпись врача</div>
-            </div>
-            <div class="ci-date" id="ciDate">—</div>
-          </div>
-        </div>
-
-        <div class="cert-actions">
-          <button class="copy-btn" id="copyBtn" onclick="copyCertificate()">Текст для Discord</button>
-          <button class="img-btn" id="imgBtn" onclick="copyCertificateAsImage()">Скопировать картинкой</button>
-        </div>
-
-        <div class="rp-row" id="rpRow" style="display:none;">
-          <button class="rp-btn" id="rpBtn" onclick="copyRoleplay()">RP /me</button>
-          <button class="do-btn" id="doBtn" onclick="copyDo()">RP /do</button>
-        </div>
-
-        <div class="copy-status" id="copyStatus"></div>
-      </div>
     </div>
 
-        <div id="specialTestWrapper" style="display: none;">
+    <div id="specialTestWrapper" style="display: none;">
       <button class="back-btn" onclick="goToMenu()">← Вернуться в главное меню</button>
       
       <h1>Углублённый психологический тест</h1>
@@ -124,7 +78,7 @@
         <label for="specialPatientName">Имя и фамилия сотрудника:</label>
         <input type="text" id="specialPatientName" placeholder="Например: Иван Петров" autocomplete="off">
 
-                <label for="specialDoctorName">Имя и фамилия врача:</label>
+        <label for="specialDoctorName">Имя и фамилия врача:</label>
         <input type="text" id="specialDoctorName" class="doctor-input" placeholder="Например: Александр Смирнов" autocomplete="off">
       </div>
 
@@ -140,47 +94,55 @@
       <button class="gen-btn" id="specialGenBtn" onclick="generateCertificate()" style="display:none;">
         Сформировать справку
       </button>
-
-      <div id="specialCertWrapper" style="display:none;">
-        <div id="specialCertImage">
-          <div class="ci-header">
-            <img class="ci-logo" alt="Звезда жизни" src="assets/logo-star.svg">
-            <div class="ci-header-text">
-              <div class="ci-org">Emergency Medical Service</div>
-              <div class="ci-title">СПРАВКА</div>
-              <div class="ci-subtitle">о психическом состоянии сотрудника (Углублённый тест)</div>
-            </div>
-          </div>
-
-          <div class="ci-body">
-            <div class="ci-row">
-              <span class="ci-label">Сотрудник:</span>
-              <span class="ci-value" id="specialCiPatient">—</span>
-            </div>
-            <div class="ci-row">
-              <span class="ci-label">Психическое состояние:</span>
-              <div class="ci-state" id="specialCiState">—</div>
-            </div>
-            <div class="ci-verdict" id="specialCiVerdict">—</div>
-          </div>
-
-          <div class="ci-footer">
-            <div>
-              <div class="ci-sign-line" id="specialCiDoctor">—</div>
-              <div class="ci-label">Подпись врача</div>
-            </div>
-            <div class="ci-date" id="specialCiDate">—</div>
-          </div>
-        </div>
-
-        <div class="cert-actions">
-          <button class="copy-btn" onclick="copyCertificate()">Текст для Discord</button>
-        </div>
-
-        <div class="copy-status" id="specialCopyStatus"></div>
-      </div>
     </div>
   </main>
+
+  <!-- СПРАВКА ВЫНЕСЕНА СЮДА, ЧТОБЫ ОНА НЕ ЗАВИСЕЛА ОТ ТЕСТОВ -->
+  <div id="certWrapper" style="display:none; margin-top: 30px;">
+    <div id="certImage">
+      <div id="ciStampArea"></div>
+      <div class="ci-header">
+        <img class="ci-logo" alt="Звезда жизни" src="assets/logo-star.svg">
+        <div class="ci-header-text">
+          <div class="ci-org">Emergency Medical Service</div>
+          <div class="ci-title">СПРАВКА</div>
+          <div class="ci-subtitle">о психическом состоянии сотрудника</div>
+        </div>
+      </div>
+
+      <div class="ci-body">
+        <div class="ci-row">
+          <span class="ci-label">Сотрудник:</span>
+          <span class="ci-value" id="ciPatient">—</span>
+        </div>
+        <div class="ci-row">
+          <span class="ci-label">Психическое состояние:</span>
+          <div class="ci-state" id="ciState">—</div>
+        </div>
+        <div class="ci-verdict" id="ciVerdict">—</div>
+      </div>
+
+      <div class="ci-footer">
+        <div>
+          <div class="ci-sign-line" id="ciDoctor">—</div>
+          <div class="ci-label">Подпись врача</div>
+        </div>
+        <div class="ci-date" id="ciDate">—</div>
+      </div>
+    </div>
+
+    <div class="cert-actions">
+      <button class="copy-btn" id="copyBtn" onclick="copyCertificate()">Текст для Discord</button>
+      <button class="img-btn" id="imgBtn" onclick="copyCertificateAsImage()">Скопировать картинкой</button>
+    </div>
+
+    <div class="rp-row" id="rpRow" style="display:none;">
+      <button class="rp-btn" id="rpBtn" onclick="copyRoleplay()">RP /me</button>
+      <button class="do-btn" id="doBtn" onclick="copyDo()">RP /do</button>
+    </div>
+
+    <div class="copy-status" id="copyStatus"></div>
+  </div>
 
   <script src="js/data.js"></script>
   <script src="js/utils.js"></script>
