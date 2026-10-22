@@ -114,14 +114,70 @@
       </div>
     </div>
 
-    <div id="specialTestWrapper" style="display: none;">
+        <div id="specialTestWrapper" style="display: none;">
       <button class="back-btn" onclick="goToMenu()">← Вернуться в главное меню</button>
       
       <h1>Углублённый протокол</h1>
-      <div class="subtitle">Emergency Medical Service</div>
+      <div class="subtitle">Заполните данные и ответьте на вопросы</div>
 
-      <div class="empty-state">
-        Данный раздел находится на стадии разработки.
+      <div class="patient-fields">
+        <label for="specialPatientName">Имя и фамилия сотрудника:</label>
+        <input type="text" id="specialPatientName" placeholder="Например: Иван Петров" autocomplete="off">
+
+        <label for="specialDoctorName">Имя и фамилия врача:</label>
+        <input type="text" id="specialDoctorName" placeholder="Например: Александр Смирнов" autocomplete="off">
+      </div>
+
+      <form id="specialQuiz"></form>
+      
+      <div class="form-actions">
+        <button onclick="checkAnswers('special')">Завершить и проверить</button>
+        <button class="secondary" onclick="resetQuiz()">Очистить форму</button>
+      </div>
+      
+      <div id="specialResult"></div>
+
+      <button class="gen-btn" id="specialGenBtn" onclick="generateCertificate()" style="display:none;">
+        Сформировать справку
+      </button>
+
+      <div id="specialCertWrapper" style="display:none;">
+        <div id="specialCertImage">
+          <div class="ci-header">
+            <img class="ci-logo" alt="Звезда жизни" src="assets/logo-star.svg">
+            <div class="ci-header-text">
+              <div class="ci-org">Emergency Medical Service</div>
+              <div class="ci-title">СПРАВКА</div>
+              <div class="ci-subtitle">о психическом состоянии сотрудника (Углублённый тест)</div>
+            </div>
+          </div>
+
+          <div class="ci-body">
+            <div class="ci-row">
+              <span class="ci-label">Сотрудник:</span>
+              <span class="ci-value" id="specialCiPatient">—</span>
+            </div>
+            <div class="ci-row">
+              <span class="ci-label">Психическое состояние:</span>
+              <div class="ci-state" id="specialCiState">—</div>
+            </div>
+            <div class="ci-verdict" id="specialCiVerdict">—</div>
+          </div>
+
+          <div class="ci-footer">
+            <div>
+              <div class="ci-sign-line" id="specialCiDoctor">—</div>
+              <div class="ci-label">Подпись врача</div>
+            </div>
+            <div class="ci-date" id="specialCiDate">—</div>
+          </div>
+        </div>
+
+        <div class="cert-actions">
+          <button class="copy-btn" onclick="copyCertificate()">Текст для Discord</button>
+        </div>
+
+        <div class="copy-status" id="specialCopyStatus"></div>
       </div>
     </div>
   </main>
