@@ -24,6 +24,7 @@ function startTest(type) {
     buildQuiz('normal');
   } else if (type === 'special') {
     document.getElementById('specialTestWrapper').style.display = 'block';
+    buildQuiz('special');
   }
   
   window.scrollTo(0, 0);
