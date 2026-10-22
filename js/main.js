@@ -6,11 +6,6 @@ window.addEventListener('pageshow', () => window.scrollTo(0, 0));
 
 const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
 
-if (isMobile) {
-  const certImageEl = document.getElementById('certImage');
-  if (certImageEl) certImageEl.remove();
-}
-
 document.addEventListener('DOMContentLoaded', () => {
   initStamp();
 
