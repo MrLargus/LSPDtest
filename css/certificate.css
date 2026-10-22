@@ -18,10 +18,9 @@
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
   border-radius: 4px;
   border: 1px solid #e0e0e0;
-  cursor: crosshair; /* Указывает, что можно кликнуть */
+  cursor: crosshair;
 }
 
-/* Подсказка для печати */
 #certImage.visible::after {
   content: 'Кликните в любом месте, чтобы поставить печать';
   position: absolute;
@@ -171,154 +170,8 @@
   #certImage .ci-date {
     text-align: left;
   }
-}
-
-/* Стили для справки углублённого теста */
-#specialCertImage {
-  position: fixed;
-  left: -9999px;
-  top: 0;
-  width: 700px;
-  background: #ffffff;
-  padding: 40px 50px;
-  font-family: 'Georgia', 'Times New Roman', serif;
-  color: #1a1a1a;
-  overflow: hidden;
-}
-
-#specialCertImage.visible {
-  position: relative;
-  left: auto;
-  top: auto;
-  margin: 20px auto;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-  border-radius: 4px;
-  border: 1px solid #e0e0e0;
-}
-
-#specialCertImage .ci-header {
-  position: relative;
-  border-bottom: 3px double #1a3a6c;
-  padding-bottom: 20px;
-  margin-bottom: 25px;
-  min-height: 110px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-#specialCertImage .ci-logo {
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 100px;
-  height: 100px;
-}
-
-#specialCertImage .ci-header-text { text-align: center; }
-#specialCertImage .ci-org {
-  font-size: 13px;
-  letter-spacing: 3px;
-  color: #1a3a6c;
-  font-weight: bold;
-  text-transform: uppercase;
-  margin-bottom: 6px;
-}
-#specialCertImage .ci-title {
-  font-size: 26px;
-  font-weight: bold;
-  color: #1a3a6c;
-  letter-spacing: 2px;
-  margin-bottom: 4px;
-}
-#specialCertImage .ci-subtitle {
-  font-size: 13px;
-  color: #666;
-  font-style: italic;
-}
-
-#specialCertImage .ci-body {
-  font-size: 17px;
-  line-height: 1.8;
-  margin-bottom: 30px;
-}
-#specialCertImage .ci-row { margin-bottom: 12px; }
-#specialCertImage .ci-label { color: #555; font-size: 14px; }
-#specialCertImage .ci-value { font-weight: bold; color: #1a1a1a; }
-#specialCertImage .ci-state {
-  font-size: 20px;
-  font-weight: bold;
-  padding: 4px 0;
-  display: inline-block;
-  margin: 6px 0;
-}
-#specialCertImage .ci-verdict {
-  font-size: 18px;
-  font-style: italic;
-  margin-top: 12px;
-  padding: 12px 20px;
-  border-left: 4px solid #1a3a6c;
-  background: #f0f4fa;
-}
-
-#specialCertImage .ci-footer {
-  margin-top: 40px;
-  padding-top: 20px;
-  border-top: 1px solid #ccc;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  font-size: 14px;
-}
-#specialCertImage .ci-sign-line {
-  border-bottom: 1px solid #1a1a1a;
-  min-width: 200px;
-  padding-bottom: 3px;
-  margin-bottom: 5px;
-  font-family: 'Georgia', serif;
-  font-style: italic;
-  font-size: 16px;
-}
-#specialCertImage .ci-date {
-  color: #555;
-  font-size: 13px;
-  text-align: right;
-}
-
-@media (max-width: 768px) {
-  #certImage.visible {
-    position: relative !important;
-    left: 0 !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 15px 0 !important;
-    padding: 20px 15px !important;
-    box-sizing: border-box !important;
-    display: block !important;
-  }
 
   #certImage.visible::after {
-    display: none !important; /* Убираем текст про печать */
-  }
-
-  #certImage .ci-logo {
-    position: static !important;
-    transform: none !important;
-    margin-bottom: 15px;
-    width: 70px;
-    height: 70px;
-  }
-
-  #certImage .ci-header {
-    flex-direction: column !important;
-    text-align: center;
-    padding-bottom: 15px;
-  }
-
-  #certImage .ci-footer {
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    gap: 15px;
+    display: none;
   }
 }
