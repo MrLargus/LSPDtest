@@ -1,4 +1,4 @@
-#result {
+#result, #specialResult {
   margin-top: 30px;
   padding: 25px;
   border-radius: 4px;
@@ -7,7 +7,7 @@
   border: 1px solid rgba(0,0,0,0.1);
 }
 
-#result .score {
+#result .score, #specialResult .score {
   font-size: 16px;
   font-weight: 700;
   margin-bottom: 10px;
@@ -15,13 +15,13 @@
   letter-spacing: 1px;
 }
 
-#result .label {
+#result .label, #specialResult .label {
   font-size: 22px;
   font-weight: 700;
   margin-bottom: 15px;
 }
 
-#result .recommendation {
+#result .recommendation, #specialResult .recommendation {
   font-size: 15px;
   line-height: 1.5;
   padding-top: 15px;
@@ -57,10 +57,8 @@
 }
 #ciStampArea .stamp-img { opacity: 0.9; }
 
-/* Кнопки копирования */
 .cert-actions {
   display: grid;
-  /* Автоматически переносит кнопки на новую строку, если не хватает места */
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 12px;
   margin-top: 20px;
@@ -101,7 +99,6 @@
   background: #e1e8ed;
 }
 
-/* Строгие цвета для кнопок */
 button.copy-btn { border-color: #4752C4; color: #4752C4; }
 button.copy-btn:hover { background: #f0f2ff; }
 
