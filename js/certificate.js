@@ -134,9 +134,3 @@ function downloadCanvas(canvas) {
   copyStatus.textContent = '💾 Картинка скачана файлом (буфер недоступен).';
   setTimeout(() => copyStatus.textContent = '', 4000);
 }
-
-@media (max-width: 768px) {
-  #certImage.visible::after {
-    display: none; /* Скрываем подсказку на телефонах */
-  }
-}
