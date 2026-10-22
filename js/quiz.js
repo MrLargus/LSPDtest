@@ -89,22 +89,24 @@ function checkAnswers(testType) {
 
   currentResult = { patient, doctor, rule };
 
-    const ciPatient = document.getElementById('ciPatient');
-    const ciDoctor  = document.getElementById('ciDoctor');
-    const ciDate    = document.getElementById('ciDate');
-    const ciState   = document.getElementById('ciState');
-    const ciVerdict = document.getElementById('ciVerdict');
+  
+      const ciPatient = document.getElementById('ciPatient');
+  const ciDoctor  = document.getElementById('ciDoctor');
+  const ciDate    = document.getElementById('ciDate');
+  const ciState   = document.getElementById('ciState');
+  const ciVerdict = document.getElementById('ciVerdict');
 
-    if (ciPatient) ciPatient.textContent = patient;
-    if (ciDoctor)  ciDoctor.textContent  = doctor;
-    if (ciDate)    ciDate.textContent    = `Дата осмотра: ${today}`;
-    if (ciState) {
-      ciState.textContent = rule.certState;
-      ciState.style.color = rule.imgStateColor;
-    }
-    if (ciVerdict) ciVerdict.textContent = rule.certVerdict;
+  if (ciPatient) ciPatient.textContent = patient;
+  if (ciDoctor)  ciDoctor.textContent  = doctor;
+  if (ciDate)    ciDate.textContent    = `Дата осмотра: ${today}`;
+  if (ciState) {
+    ciState.textContent = rule.certState;
+    ciState.style.color = rule.imgStateColor;
+  }
+  if (ciVerdict) ciVerdict.textContent = rule.certVerdict;
 
-    renderStampInImage();
+  renderStampInImage();
+  
 
   document.getElementById('certWrapper').style.display = 'none';
   document.getElementById('genBtn').style.display = 'block';
