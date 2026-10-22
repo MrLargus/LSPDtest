@@ -89,7 +89,6 @@ function checkAnswers(testType) {
 
   currentResult = { patient, doctor, rule };
 
-  if (!isMobile) {
     const ciPatient = document.getElementById('ciPatient');
     const ciDoctor  = document.getElementById('ciDoctor');
     const ciDate    = document.getElementById('ciDate');
@@ -106,7 +105,6 @@ function checkAnswers(testType) {
     if (ciVerdict) ciVerdict.textContent = rule.certVerdict;
 
     renderStampInImage();
-  }
 
   document.getElementById('certWrapper').style.display = 'none';
   document.getElementById('genBtn').style.display = 'block';
