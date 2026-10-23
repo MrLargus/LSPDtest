@@ -1,15 +1,23 @@
 let currentResult = null;
 let currentTestType = 'normal';
+let currentDepartment = 'lspd';
 
-function buildQuiz(testType) {
+function buildQuiz(testType, department = 'lspd') {
   currentTestType = testType;
+  currentDepartment = department;
   const isNormal = testType === 'normal';
-  
+
   const form = document.getElementById(isNormal ? 'quiz' : 'specialQuiz');
   form.innerHTML = '';
-  
-  const questionsToUse = isNormal ? normalQuestions : specialQuestions;
-  if (questionsToUse.length === 0) return;
+
+  const questionsToUse = isNormal
+    ? (normalQuestionsByDept[department] || normalQuestions)
+    : (specialQuestionsByDept[department] || specialQuestions);
+
+  if (questionsToUse.length === 0) {
+    form.innerHTML = '<div class="empty-state">Вопросы для этого отдела пока не добавлены.</div>';
+    return;
+  }
 
   let currentBlock = null;
   questionsToUse.forEach((q, qi) => {
@@ -36,8 +44,7 @@ function checkAnswers(testType) {
   const patientInput = document.getElementById(isNormal ? 'patientName' : 'specialPatientName');
   const doctorInput = document.getElementById(isNormal ? 'doctorName' : 'specialDoctorName');
   const resultEl = document.getElementById(isNormal ? 'result' : 'specialResult');
-  
-  // Определяем, в какой именно форме искать ответы
+
   const formId = isNormal ? 'quiz' : 'specialQuiz';
   const formContainer = document.getElementById(formId);
 
@@ -55,22 +62,22 @@ function checkAnswers(testType) {
   doctorInput.value = doctor;
   if (isNormal) localStorage.setItem('doctorName', doctor);
 
-  const questionsToUse = isNormal ? normalQuestions : specialQuestions;
+  const questionsToUse = isNormal
+    ? (normalQuestionsByDept[currentDepartment] || normalQuestions)
+    : (specialQuestionsByDept[currentDepartment] || specialQuestions);
+
   let mainScore = 0;
   let bonusScore = 0;
 
-  // Считаем баллы
   questionsToUse.forEach((q, qi) => {
-    // Ищем ответы ТОЛЬКО внутри текущей формы
     const checked = [...formContainer.querySelectorAll(`input[name="q${qi}"]:checked`)]
       .map(cb => parseInt(cb.value)).sort((a, b) => a - b);
-      
+
     const correct = [...q.correct].sort((a, b) => a - b);
     const isRight = checked.length === correct.length &&
       checked.every((v, i) => v === correct[i]);
-      
+
     if (isRight) {
-      // Если вопрос из блока "ДОПОЛНИТЕЛЬНЫЙ ТЕСТ", добавляем в бонусы
       if (q.block && q.block.includes("ДОПОЛНИТЕЛЬНЫЙ ТЕСТ")) {
         bonusScore += 1;
       } else {
@@ -79,15 +86,10 @@ function checkAnswers(testType) {
     }
   });
 
-  // Считаем максимально возможный балл за основные вопросы (без доп. блока)
   const baseQuestionsCount = questionsToUse.filter(q => !q.block || !q.block.includes("ДОПОЛНИТЕЛЬНЫЙ ТЕСТ")).length;
-  
-  // Итоговый балл не может превышать максимум основных вопросов
   const total = Math.min(mainScore + bonusScore, baseQuestionsCount);
-  
-  // Считаем процент от основных вопросов
   const percent = (total / baseQuestionsCount) * 100;
-  
+
   let rule;
   if (percent < 45) rule = colorRules[0];
   else if (percent < 70) rule = colorRules[1];
@@ -111,12 +113,12 @@ function checkAnswers(testType) {
     day: '2-digit', month: '2-digit', year: 'numeric'
   });
 
-  currentResult = { patient, doctor, rule, testType };
+  currentResult = { patient, doctor, rule, testType, department: currentDepartment };
 
   document.getElementById('ciPatient').textContent = patient;
   document.getElementById('ciDoctor').textContent = doctor;
   document.getElementById('ciDate').textContent = `Дата осмотра: ${today}`;
-  
+
   const ciState = document.getElementById('ciState');
   ciState.textContent = rule.certState;
   ciState.style.color = rule.imgStateColor;
@@ -127,9 +129,10 @@ function checkAnswers(testType) {
   document.getElementById('certWrapper').style.display = 'none';
   document.getElementById(isNormal ? 'genBtn' : 'specialGenBtn').style.display = 'block';
 }
+
 function resetQuiz() {
   document.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = false);
-  
+
   ['result', 'specialResult'].forEach(id => {
     const el = document.getElementById(id);
     if (el) {
@@ -153,7 +156,7 @@ function resetQuiz() {
 
   currentResult = null;
   clearStamp();
-  
+
   const p1 = document.getElementById('patientName');
   const p2 = document.getElementById('specialPatientName');
   if (p1) p1.value = '';

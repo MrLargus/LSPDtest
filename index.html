@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +12,7 @@
   <link rel="stylesheet" href="css/result.css">
   <link rel="stylesheet" href="css/certificate.css">
 </head>
+
 <body>
 
   <header class="ems-header">
@@ -27,15 +29,16 @@
     <div id="startScreen">
       <h1>Официальный портал медосвидетельствования</h1>
       <div class="subtitle">Выберите необходимый протокол тестирования</div>
-      
+
       <div class="menu-grid">
-        <button class="menu-btn" onclick="startTest('normal')">
+        <button class="menu-btn" onclick="openNormalModal()">
           <span class="btn-title">Стандартный тест</span>
           <span class="btn-subtitle">Тест психического здоровья</span>
         </button>
-        <button class="menu-btn special" onclick="startTest('special')">
+        <button class="menu-btn special" onclick="openSpecialModal()">
           <span class="btn-title">Углублённый тест</span>
-          <span class="btn-subtitle">Расширенная проверка для повторного тестирования либо по личной просьбе старшего состава EMS или LSPD</span>
+          <span class="btn-subtitle">Расширенная проверка для повторного тестирования либо по личной просьбе старшего
+            состава</span>
         </button>
       </div>
     </div>
@@ -51,16 +54,17 @@
         <input type="text" id="patientName" placeholder="Например: Иван Петров" autocomplete="off">
 
         <label for="doctorName">Имя и фамилия врача:</label>
-        <input type="text" id="doctorName" class="doctor-input" placeholder="Например: Александр Смирнов" autocomplete="off">
+        <input type="text" id="doctorName" class="doctor-input" placeholder="Например: Александр Смирнов"
+          autocomplete="off">
       </div>
 
       <form id="quiz"></form>
-      
+
       <div class="form-actions">
         <button onclick="checkAnswers('normal')">Завершить и проверить</button>
         <button class="secondary" onclick="resetQuiz()">Очистить форму</button>
       </div>
-      
+
       <div id="result"></div>
 
       <button class="gen-btn" id="genBtn" onclick="generateCertificate()" style="display:none;">
@@ -70,7 +74,7 @@
 
     <div id="specialTestWrapper" style="display: none;">
       <button class="back-btn" onclick="goToMenu()">← Вернуться в главное меню</button>
-      
+
       <h1>Углублённый психологический тест</h1>
       <div class="subtitle">Заполните данные и ответьте на вопросы</div>
 
@@ -79,16 +83,17 @@
         <input type="text" id="specialPatientName" placeholder="Например: Иван Петров" autocomplete="off">
 
         <label for="specialDoctorName">Имя и фамилия врача:</label>
-        <input type="text" id="specialDoctorName" class="doctor-input" placeholder="Например: Александр Смирнов" autocomplete="off">
+        <input type="text" id="specialDoctorName" class="doctor-input" placeholder="Например: Александр Смирнов"
+          autocomplete="off">
       </div>
 
       <form id="specialQuiz"></form>
-      
+
       <div class="form-actions">
         <button onclick="checkAnswers('special')">Завершить и проверить</button>
         <button class="secondary" onclick="resetQuiz()">Очистить форму</button>
       </div>
-      
+
       <div id="specialResult"></div>
 
       <button class="gen-btn" id="specialGenBtn" onclick="generateCertificate()" style="display:none;">
@@ -96,6 +101,36 @@
       </button>
     </div>
   </main>
+
+  <!-- Модальное окно выбора отдела для стандартного теста -->
+  <div id="normalModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+      <h2>Выберите отдел</h2>
+      <p class="modal-subtitle">Для какого подразделения проводится стандартный тест?</p>
+      <div class="modal-grid">
+        <button class="modal-btn" onclick="startNormalTest('lspd')">LSPD</button>
+        <button class="modal-btn" onclick="startNormalTest('advocate')">Адвокатура</button>
+        <button class="modal-btn disabled" disabled onclick="startNormalTest('ems')">EMS</button>
+        <button class="modal-btn disabled" disabled onclick="startNormalTest('gov')">GOV</button>
+      </div>
+      <button class="modal-close" onclick="closeModal('normalModal')">Отмена</button>
+    </div>
+  </div>
+
+  <!-- Модальное окно выбора отдела -->
+  <div id="specialModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+      <h2>Выберите отдел</h2>
+      <p class="modal-subtitle">Для какого подразделения проводится углублённый тест?</p>
+      <div class="modal-grid">
+        <button class="modal-btn" onclick="startSpecialTest('lspd')">LSPD</button>
+        <button class="modal-btn" onclick="startSpecialTest('advocate')">Адвокатура</button>
+        <button class="modal-btn disabled" disabled onclick="startSpecialTest('ems')">EMS</button>
+        <button class="modal-btn disabled" disabled onclick="startSpecialTest('gov')">GOV</button>
+      </div>
+      <button class="modal-close" onclick="closeSpecialModal()">Отмена</button>
+    </div>
+  </div>
 
   <!-- СПРАВКА ВЫНЕСЕНА СЮДА, ЧТОБЫ ОНА НЕ ЗАВИСЕЛА ОТ ТЕСТОВ -->
   <div id="certWrapper" style="display:none; margin-top: 30px;">
@@ -151,4 +186,5 @@
   <script src="js/certificate.js"></script>
   <script src="js/main.js"></script>
 </body>
+
 </html>
