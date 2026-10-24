@@ -30,9 +30,14 @@ function buildQuiz(testType, department = 'lspd') {
     }
     const div = document.createElement('div');
     div.className = 'question';
+
+    // Если у вопроса есть scores — используем радиокнопки (один ответ),
+    // иначе — чекбоксы (как было)
+    const inputType = q.scores ? 'radio' : 'checkbox';
+
     let html = `<h3>${qi + 1}. ${q.text}</h3>`;
     q.answers.forEach((a, ai) => {
-      html += `<label class="answer"><input type="checkbox" name="q${qi}" value="${ai}"> <span>${a}</span></label>`;
+      html += `<label class="answer"><input type="${inputType}" name="q${qi}" value="${ai}"> <span>${a}</span></label>`;
     });
     div.innerHTML = html;
     form.appendChild(div);
@@ -70,18 +75,35 @@ function checkAnswers(testType) {
   let bonusScore = 0;
 
   questionsToUse.forEach((q, qi) => {
-    const checked = [...formContainer.querySelectorAll(`input[name="q${qi}"]:checked`)]
-      .map(cb => parseInt(cb.value)).sort((a, b) => a - b);
+    // Новая логика: у вопроса есть поле scores — частичные баллы (0 / 0.5 / 1)
+    if (q.scores) {
+      const checked = [...formContainer.querySelectorAll(`input[name="q${qi}"]:checked`)]
+        .map(cb => parseInt(cb.value));
 
-    const correct = [...q.correct].sort((a, b) => a - b);
-    const isRight = checked.length === correct.length &&
-      checked.every((v, i) => v === correct[i]);
+      // Для радиокнопок выбран ровно один ответ
+      if (checked.length === 1) {
+        const score = q.scores[checked[0]] || 0;
+        if (q.block && q.block.includes("ДОПОЛНИТЕЛЬНЫЙ ТЕСТ")) {
+          bonusScore += score;
+        } else {
+          mainScore += score;
+        }
+      }
+    } else {
+      // Старая логика: бинарная проверка через correct (для LSPD, EMS, GOV и т.д.)
+      const checked = [...formContainer.querySelectorAll(`input[name="q${qi}"]:checked`)]
+        .map(cb => parseInt(cb.value)).sort((a, b) => a - b);
 
-    if (isRight) {
-      if (q.block && q.block.includes("ДОПОЛНИТЕЛЬНЫЙ ТЕСТ")) {
-        bonusScore += 1;
-      } else {
-        mainScore += 1;
+      const correct = [...q.correct].sort((a, b) => a - b);
+      const isRight = checked.length === correct.length &&
+        checked.every((v, i) => v === correct[i]);
+
+      if (isRight) {
+        if (q.block && q.block.includes("ДОПОЛНИТЕЛЬНЫЙ ТЕСТ")) {
+          bonusScore += 1;
+        } else {
+          mainScore += 1;
+        }
       }
     }
   });
@@ -96,8 +118,11 @@ function checkAnswers(testType) {
   else if (percent < 90) rule = colorRules[2];
   else rule = colorRules[3];
 
+  // Округляем total для отображения (если есть дробные баллы)
+  const displayTotal = Number.isInteger(total) ? total : total.toFixed(1);
+
   resultEl.innerHTML = `
-    <div class="score">${rule.emoji} Результат: ${total} из ${baseQuestionsCount}</div>
+    <div class="score">${rule.emoji} Результат: ${displayTotal} из ${baseQuestionsCount}</div>
     <div class="label">${rule.label}</div>
     <div class="recommendation">${rule.recommendation}</div>
   `;
@@ -131,7 +156,7 @@ function checkAnswers(testType) {
 }
 
 function resetQuiz() {
-  document.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = false);
+  document.querySelectorAll('input[type=checkbox], input[type=radio]').forEach(cb => cb.checked = false);
 
   ['result', 'specialResult'].forEach(id => {
     const el = document.getElementById(id);
