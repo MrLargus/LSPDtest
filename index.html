@@ -4,24 +4,50 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>|EMS| Чек-лист психического здоровья</title>
+  <title>EMS EPD | Чек-лист психического здоровья</title>
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
 
   <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/portal.css">
+  <link rel="stylesheet" href="css/themes.css">
   <link rel="stylesheet" href="css/form.css">
   <link rel="stylesheet" href="css/result.css">
   <link rel="stylesheet" href="css/certificate.css">
+
+  <style>
+    html { transition: none; }
+  </style>
+  <script src="js/theme-init.js"></script>
 </head>
 
-<body>
+<body class="theme-light">
 
+  <!-- ===== TOPBAR ===== -->
+  <div class="topbar">
+    <div class="topbar-inner">
+      <span class="topbar-left">EMS // DOC: EPD · PSYCHOLOGICAL PROTOCOL</span>
+      <span class="topbar-right">
+        <span class="status-dot"></span> INTERNAL
+        <span class="topbar-divider">|</span>
+        <span id="topbar-date">—</span>
+      </span>
+    </div>
+  </div>
+
+  <!-- ===== HEADER ===== -->
   <header class="ems-header">
     <div class="ems-header-inner">
-      <img src="assets/logo-star.svg" alt="EMS" class="ems-logo">
-      <div class="ems-header-text">
-        <span class="ems-title">Emergency Medical Service</span>
-        <span class="ems-subtitle">Психологический отдел EMS</span>
-      </div>
+      <a href="index.html" class="brand">
+        <img src="assets/logo-star.svg" alt="EMS" class="ems-logo">
+        <div class="ems-header-text">
+          <span class="ems-title">EMERGENCY MEDICAL SERVICE</span>
+          <span class="ems-subtitle">Отдел психиатрии — EPD</span>
+        </div>
+      </a>
+      <button id="themeToggle" class="theme-toggle" title="Переключить тему" aria-label="Переключить тему">
+        <span class="theme-icon-light">☀</span>
+        <span class="theme-icon-dark">☾</span>
+      </button>
     </div>
   </header>
 
@@ -37,14 +63,13 @@
         </button>
         <button class="menu-btn special" onclick="openSpecialModal()">
           <span class="btn-title">Углублённый тест</span>
-          <span class="btn-subtitle">Расширенная проверка для повторного тестирования либо по личной просьбе старшего
-            состава</span>
+          <span class="btn-subtitle">Расширенная проверка для повторного тестирования либо по личной просьбе старшего состава</span>
         </button>
       </div>
     </div>
 
     <div id="normalTestWrapper" style="display: none;">
-      <button class="back-btn" onclick="goToMenu()">← Вернуться в главное меню</button>
+      <button class="back-btn" onclick="goToMenu()">⬅ Вернуться в главное меню</button>
 
       <h1>Психологический тест</h1>
       <div class="subtitle">Заполните данные и ответьте на вопросы</div>
@@ -54,8 +79,7 @@
         <input type="text" id="patientName" placeholder="Например: Иван Петров" autocomplete="off">
 
         <label for="doctorName">Имя и фамилия врача:</label>
-        <input type="text" id="doctorName" class="doctor-input" placeholder="Например: Александр Смирнов"
-          autocomplete="off">
+        <input type="text" id="doctorName" class="doctor-input" placeholder="Например: Александр Смирнов" autocomplete="off">
       </div>
 
       <form id="quiz"></form>
@@ -73,7 +97,7 @@
     </div>
 
     <div id="specialTestWrapper" style="display: none;">
-      <button class="back-btn" onclick="goToMenu()">← Вернуться в главное меню</button>
+      <button class="back-btn" onclick="goToMenu()">⬅ Вернуться в главное меню</button>
 
       <h1>Углублённый психологический тест</h1>
       <div class="subtitle">Заполните данные и ответьте на вопросы</div>
@@ -83,8 +107,7 @@
         <input type="text" id="specialPatientName" placeholder="Например: Иван Петров" autocomplete="off">
 
         <label for="specialDoctorName">Имя и фамилия врача:</label>
-        <input type="text" id="specialDoctorName" class="doctor-input" placeholder="Например: Александр Смирнов"
-          autocomplete="off">
+        <input type="text" id="specialDoctorName" class="doctor-input" placeholder="Например: Александр Смирнов" autocomplete="off">
       </div>
 
       <form id="specialQuiz"></form>
@@ -132,7 +155,7 @@
     </div>
   </div>
 
-  <!-- СПРАВКА ВЫНЕСЕНА СЮДА, ЧТОБЫ ОНА НЕ ЗАВИСЕЛА ОТ ТЕСТОВ -->
+  <!-- СПРАВКА -->
   <div id="certWrapper" style="display:none; margin-top: 30px;">
     <div id="certImage">
       <div id="ciStampArea"></div>
@@ -179,12 +202,32 @@
     <div class="copy-status" id="copyStatus"></div>
   </div>
 
+  <!-- ===== FOOTER ===== -->
+  <footer class="ems-footer">
+    <div class="footer-inner">
+      <span>© EMS SAN-ANDREAS — DEPARTMENT OF HEALTH</span>
+      <span>INTERNAL USE ONLY // НЕ ДЛЯ ГРАЖДАНСКИХ</span>
+    </div>
+  </footer>
+
   <script src="js/data.js"></script>
   <script src="js/utils.js"></script>
   <script src="js/stamp.js"></script>
   <script src="js/quiz.js"></script>
   <script src="js/certificate.js"></script>
   <script src="js/main.js"></script>
+  <script src="js/theme.js"></script>
+  <script>
+    // Дата в топбаре
+    (function () {
+      const el = document.getElementById('topbar-date');
+      if (el) {
+        const d = new Date();
+        const p = n => String(n).padStart(2, '0');
+        el.textContent = `${p(d.getDate())}.${p(d.getMonth() + 1)}.${d.getFullYear()} // ${p(d.getHours())}:${p(d.getMinutes())}`;
+      }
+    })();
+  </script>
 </body>
 
 </html>
