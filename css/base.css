@@ -3,14 +3,30 @@
 * { box-sizing: border-box; }
 
 html {
-  background: linear-gradient(90deg, #4a5568 0%, #9aa5b4 20%, #eef1f5 50%, #9aa5b4 80%, #4a5568 100%);
+  background: linear-gradient(
+    90deg,
+    #4a5568 0%,
+    #9aa5b4 10%,
+    #eef1f5 19%,
+    #eef1f5 81%,
+    #9aa5b4 90%,
+    #4a5568 100%
+  );
   background-size: cover;
   background-repeat: no-repeat;
   min-height: 100vh;
   transition: background 0.5s ease;
 }
 html.theme-dark {
-  background: linear-gradient(90deg, #000 0%, #060b14 20%, #162338 50%, #060b14 80%, #000 100%);
+  background: linear-gradient(
+    90deg,
+    #000000 0%,
+    #060b14 10%,
+    #162338 19%,
+    #162338 81%,
+    #060b14 90%,
+    #000000 100%
+  );
 }
 @supports (min-height: 100dvh) { html { min-height: 100dvh; } }
 
