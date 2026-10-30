@@ -47,26 +47,7 @@
   box-shadow: none;
 }
 
-.stamp-img {
-  position: absolute;
-  width: 200px;
-  height: 200px;
-  pointer-events: none;
-  transform: translate(-50%, -50%);
-  opacity: 0.85;
-  mix-blend-mode: multiply;
-  z-index: 10;
-}
-
-#ciStampArea {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  overflow: hidden;
-  z-index: 10;
-}
-#ciStampArea .stamp-img { opacity: 0.9; }
-
+/* ===== Блок кнопок справки ===== */
 .cert-actions {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -121,14 +102,8 @@ button.rp-btn:hover { background: rgba(142, 68, 173, 0.08); }
 button.do-btn { border-color: #16a085; color: #16a085; }
 button.do-btn:hover { background: rgba(22, 160, 133, 0.08); }
 
-body.theme-dark button.copy-btn,
-body.theme-dark button.img-btn,
-body.theme-dark button.rp-btn,
-body.theme-dark button.do-btn {
-  background: transparent;
-}
-
-body.theme-dark button.copy-btn { color: #a8b3ff; border-color: #a8b3ff; }
-body.theme-dark button.img-btn  { color: #7cc4ee; border-color: #7cc4ee; }
-body.theme-dark button.rp-btn   { color: #d6b5ee; border-color: #d6b5ee; }
-body.theme-dark button.do-btn   { color: #7fe0cc; border-color: #7fe0cc; }
+/* Тёмная тема для кнопок справки */
+body.theme-dark button.copy-btn { color: #a8b3ff; border-color: #a8b3ff; background: transparent; }
+body.theme-dark button.img-btn  { color: #7cc4ee; border-color: #7cc4ee; background: transparent; }
+body.theme-dark button.rp-btn   { color: #d6b5ee; border-color: #d6b5ee; background: transparent; }
+body.theme-dark button.do-btn   { color: #7fe0cc; border-color: #7fe0cc; background: transparent; }

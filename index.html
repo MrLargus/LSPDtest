@@ -15,7 +15,9 @@
   <link rel="stylesheet" href="css/certificate.css">
 
   <style>
-    html { transition: none; }
+    html {
+      transition: none;
+    }
   </style>
   <script src="js/theme-init.js"></script>
 </head>
@@ -52,8 +54,9 @@
   </header>
 
   <main class="ems-content">
+    <!-- ГЛАВНОЕ МЕНЮ -->
     <div id="startScreen">
-      <h1>Официальный портал медосвидетельствования</h1>
+      <h1>Портал EPD</h1>
       <div class="subtitle">Выберите необходимый протокол тестирования</div>
 
       <div class="menu-grid">
@@ -63,14 +66,15 @@
         </button>
         <button class="menu-btn special" onclick="openSpecialModal()">
           <span class="btn-title">Углублённый тест</span>
-          <span class="btn-subtitle">Расширенная проверка для повторного тестирования либо по личной просьбе старшего состава</span>
+          <span class="btn-subtitle">Расширенная проверка для повторного тестирования либо по личной просьбе старшего
+            состава</span>
         </button>
       </div>
     </div>
 
+    <!-- СТАНДАРТНЫЙ ТЕСТ -->
     <div id="normalTestWrapper" style="display: none;">
       <button class="back-btn" onclick="goToMenu()">⬅ Вернуться в главное меню</button>
-
       <h1>Психологический тест</h1>
       <div class="subtitle">Заполните данные и ответьте на вопросы</div>
 
@@ -79,7 +83,8 @@
         <input type="text" id="patientName" placeholder="Например: Иван Петров" autocomplete="off">
 
         <label for="doctorName">Имя и фамилия врача:</label>
-        <input type="text" id="doctorName" class="doctor-input" placeholder="Например: Александр Смирнов" autocomplete="off">
+        <input type="text" id="doctorName" class="doctor-input" placeholder="Например: Александр Смирнов"
+          autocomplete="off">
       </div>
 
       <form id="quiz"></form>
@@ -96,9 +101,9 @@
       </button>
     </div>
 
+    <!-- УГЛУБЛЁННЫЙ ТЕСТ -->
     <div id="specialTestWrapper" style="display: none;">
       <button class="back-btn" onclick="goToMenu()">⬅ Вернуться в главное меню</button>
-
       <h1>Углублённый психологический тест</h1>
       <div class="subtitle">Заполните данные и ответьте на вопросы</div>
 
@@ -107,7 +112,8 @@
         <input type="text" id="specialPatientName" placeholder="Например: Иван Петров" autocomplete="off">
 
         <label for="specialDoctorName">Имя и фамилия врача:</label>
-        <input type="text" id="specialDoctorName" class="doctor-input" placeholder="Например: Александр Смирнов" autocomplete="off">
+        <input type="text" id="specialDoctorName" class="doctor-input" placeholder="Например: Александр Смирнов"
+          autocomplete="off">
       </div>
 
       <form id="specialQuiz"></form>
@@ -125,7 +131,7 @@
     </div>
   </main>
 
-  <!-- Модальное окно выбора отдела для стандартного теста -->
+  <!-- Модальные окна -->
   <div id="normalModal" class="modal-overlay" style="display: none;">
     <div class="modal-content">
       <h2>Выберите отдел</h2>
@@ -140,7 +146,6 @@
     </div>
   </div>
 
-  <!-- Модальное окно выбора отдела -->
   <div id="specialModal" class="modal-overlay" style="display: none;">
     <div class="modal-content">
       <h2>Выберите отдел</h2>
@@ -155,7 +160,7 @@
     </div>
   </div>
 
-  <!-- СПРАВКА -->
+  <!-- СПРАВКА (оставляем как есть, но добавим классы для тем) -->
   <div id="certWrapper" style="display:none; margin-top: 30px;">
     <div id="certImage">
       <div id="ciStampArea"></div>
