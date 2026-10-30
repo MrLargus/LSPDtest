@@ -1,0 +1,109 @@
+#result,
+#specialResult {
+  margin-top: 30px;
+  padding: 25px;
+  border-radius: 8px;
+  transition: background 0.4s, color 0.4s;
+  text-align: center;
+  border: 1px solid var(--border);
+}
+
+#result .score,
+#specialResult .score {
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+#result .label,
+#specialResult .label {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+#result .recommendation,
+#specialResult .recommendation {
+  font-size: 14.5px;
+  line-height: 1.6;
+  padding-top: 15px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.copy-status {
+  text-align: center;
+  color: var(--teal);
+  font-weight: 600;
+  margin-top: 15px;
+  font-size: 14px;
+  font-family: var(--mono);
+  min-height: 0;
+  height: auto;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+/* ===== Блок кнопок справки ===== */
+.cert-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.rp-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.cert-actions button,
+.rp-row button {
+  margin-top: 0;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 14px 16px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  color: var(--text);
+  background: var(--panel);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--mono);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+
+.cert-actions button:hover,
+.rp-row button:hover {
+  background: var(--panel-soft);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+button.copy-btn { border-color: #4752C4; color: #4752C4; }
+button.copy-btn:hover { background: rgba(71, 82, 196, 0.08); }
+
+button.img-btn { border-color: #2980b9; color: #2980b9; }
+button.img-btn:hover { background: rgba(41, 128, 185, 0.08); }
+
+button.rp-btn { border-color: #8e44ad; color: #8e44ad; }
+button.rp-btn:hover { background: rgba(142, 68, 173, 0.08); }
+
+button.do-btn { border-color: #16a085; color: #16a085; }
+button.do-btn:hover { background: rgba(22, 160, 133, 0.08); }
+
+/* Тёмная тема для кнопок справки */
+body.theme-dark button.copy-btn { color: #a8b3ff; border-color: #a8b3ff; background: transparent; }
+body.theme-dark button.img-btn  { color: #7cc4ee; border-color: #7cc4ee; background: transparent; }
+body.theme-dark button.rp-btn   { color: #d6b5ee; border-color: #d6b5ee; background: transparent; }
+body.theme-dark button.do-btn   { color: #7fe0cc; border-color: #7fe0cc; background: transparent; }
